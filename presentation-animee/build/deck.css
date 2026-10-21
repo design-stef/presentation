@@ -1,0 +1,294 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/inter-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/inter-latin-ext-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --ground: #ffffff;
+  --surface: #f4f3f1;
+  --ink: #121212;
+  --mute: #6f6b65;
+  --mute-dark: #a8a39b;
+  --laser: #ff5a1f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-feature-settings: 'tnum' 0, 'ss01' 0;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--ink); color: var(--ground); }
+
+#deck { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--ground); }
+
+.scene-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.inner { position: absolute; inset: 0; overflow: hidden; background: var(--ground); }
+.scene-frame[data-theme='dark'] .inner { background: var(--ink); color: #fff; }
+
+/* Photos */
+.ph { position: absolute; margin: 0; overflow: hidden; }
+.ph img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
+.laser {
+  position: absolute;
+  height: 3px;
+  background: var(--laser);
+  box-shadow: 0 0 18px 4px rgba(255, 90, 31, 0.75), 0 0 2px 1px #fff3e0;
+  opacity: 0;
+  z-index: 3;
+}
+
+.glow {
+  position: absolute;
+  left: 360px;
+  top: 470px;
+  width: 1320px;
+  height: 640px;
+  background: radial-gradient(closest-side, rgba(255, 246, 228, 0.32), rgba(255, 246, 228, 0.08) 55%, rgba(255, 246, 228, 0) 100%);
+  transform-origin: 50% 0%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+}
+
+/* Légendes */
+.cap { position: absolute; z-index: 5; max-width: 880px; color: var(--ink); }
+.cap--plate { background: var(--ground); padding: 40px 60px 50px 60px; }
+.cap--bl { left: 0; bottom: 0; }
+.cap--tl { left: 0; top: 0; }
+.cap--tr { right: 0; top: 0; }
+.cap--br { right: 0; bottom: 0; }
+.scene-frame[data-theme='dark'] .cap { color: #fff; }
+.scene-frame[data-theme='dark'] .cap--plate { background: var(--ink); }
+
+.cap-num {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 20px;
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.06em; }
+.num, .rise { display: inline-block; }
+.tot { font-size: 24px; letter-spacing: -0.02em; color: var(--mute); margin-top: 2px; }
+.scene-frame[data-theme='dark'] .tot { color: var(--mute-dark); }
+
+.cap-name {
+  font-size: 84px;
+  line-height: 0.98;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.cap-meta {
+  margin-top: 16px;
+  font-size: 40px;
+  line-height: 1.16;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--mute);
+  max-width: 780px;
+  text-wrap: balance;
+}
+.scene-frame[data-theme='dark'] .cap-meta { color: var(--mute-dark); }
+.w { display: inline-block; }
+
+.cap--row { display: flex; align-items: baseline; gap: 40px; max-width: none; }
+.cap--row .cap-num { margin: 0; align-self: flex-start; }
+.cap--row .cap-name { font-size: 64px; white-space: nowrap; }
+.cap--row .cap-meta { margin: 0; white-space: nowrap; max-width: none; }
+
+/* Couverture et fin */
+.cover { position: absolute; inset: 0; }
+.wordmark {
+  position: absolute;
+  left: 96px;
+  top: 84px;
+  font-size: 44px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.cover-line { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+.cover-line line { stroke: var(--ink); stroke-width: 3; }
+.years {
+  position: absolute;
+  left: 1296px;
+  top: 300px;
+  font-size: 96px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.byline {
+  position: absolute;
+  left: 1300px;
+  top: 420px;
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--mute);
+}
+.cover-title {
+  position: absolute;
+  left: 84px;
+  bottom: 64px;
+  font-size: 232px;
+  line-height: 0.9;
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+.end .cover-title { font-size: 300px; }
+.end .byline { left: 96px; top: auto; bottom: 380px; font-size: 48px; color: var(--ink); }
+
+/* Transition */
+#cut {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+}
+#cut line { stroke: #fff; stroke-width: 3; }
+
+/* Avancement, comme sur le site */
+#progress { position: absolute; top: 0; right: 0; width: 6px; height: 1080px; z-index: 21; pointer-events: none; mix-blend-mode: difference; }
+#progress i { display: block; width: 100%; height: 100%; background: #fff; transform-origin: 50% 0%; }
+
+/* ===== Scènes recomposées ===== */
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.tag {
+  position: absolute;
+  z-index: 4;
+  background: var(--ground);
+  color: var(--ink);
+  padding: 16px 26px 18px;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.tag b { font-weight: 600; }
+.brk { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: square; }
+
+/* 1. Couverture */
+.cover.cam { background: var(--ground); }
+.montage .mt { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.montage .mt img { transform-origin: 50% 50%; }
+.y0, .count {
+  position: absolute;
+  top: 300px;
+  font-size: 96px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.y0 { right: 364px; }
+.count { left: 1560px; color: #fff; mix-blend-mode: difference; transform-origin: 50% 50%; z-index: 3; }
+.cover .byline { left: 1270px; }
+
+/* 2. Crossed, principe */
+.sheet { position: absolute; transform-origin: 40% 50%; }
+.band { position: absolute; left: 0; width: 100%; height: 26px; background: var(--ink); opacity: 0; }
+.laser-head {
+  position: absolute; left: 0; top: 0; width: 4px; height: 80px; margin-left: -2px;
+  background: #fff3e0;
+  box-shadow: 0 0 16px 6px rgba(255, 90, 31, 0.9), 0 0 44px 14px rgba(255, 90, 31, 0.4);
+  opacity: 0;
+}
+.spark {
+  position: absolute; left: 0; top: 0; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%;
+  background: #ffc27d; box-shadow: 0 0 6px 2px rgba(255, 120, 40, 0.85); opacity: 0;
+}
+.scan {
+  position: absolute; left: 0; top: 0; width: 100%; height: 3px;
+  background: var(--laser); box-shadow: 0 0 14px 3px rgba(255, 90, 31, 0.55); opacity: 0;
+}
+.fold-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; overflow: visible; z-index: 2; }
+.profile { fill: none; stroke: var(--ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+.fold-num circle { fill: var(--ink); }
+.fold-num text { fill: #fff; font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 600; text-anchor: middle; }
+
+/* 3. Crossed de nuit */
+#sc-crossed-nuit .cam img { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+#sc-crossed-nuit .dark {
+  position: absolute; inset: 0; background: url('assets/img/p03-a.jpg') center / 100% 100% no-repeat;
+  --r1: 0px; --r2: 0px; --r3: 0px; --r4: 0px;
+  filter: brightness(0.07) saturate(0.35);
+  -webkit-mask-image:
+    radial-gradient(circle at 115px 662px, transparent calc(var(--r1) - 240px), #000 var(--r1)),
+    radial-gradient(circle at 1728px 624px, transparent calc(var(--r2) - 240px), #000 var(--r2)),
+    radial-gradient(circle at 1000px 880px, transparent calc(var(--r3) - 320px), #000 var(--r3)),
+    radial-gradient(circle at 960px 540px, transparent calc(var(--r4) - 500px), #000 var(--r4));
+  mask-image:
+    radial-gradient(circle at 115px 662px, transparent calc(var(--r1) - 240px), #000 var(--r1)),
+    radial-gradient(circle at 1728px 624px, transparent calc(var(--r2) - 240px), #000 var(--r2)),
+    radial-gradient(circle at 1000px 880px, transparent calc(var(--r3) - 320px), #000 var(--r3)),
+    radial-gradient(circle at 960px 540px, transparent calc(var(--r4) - 500px), #000 var(--r4));
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.spot {
+  position: absolute; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 220, 150, 0.85), rgba(255, 170, 60, 0.28) 45%, rgba(255, 170, 60, 0) 100%);
+  mix-blend-mode: screen; opacity: 0; pointer-events: none;
+}
+.spot--wide { width: 1100px; height: 460px; margin: -230px 0 0 -550px; }
+.bigword {
+  position: absolute; left: 0; right: 0; top: 380px; z-index: 3;
+  text-align: center; color: #fff;
+  font-size: 300px; line-height: 1; font-weight: 600; letter-spacing: -0.05em;
+}
+.ch { display: inline-block; }
+
+/* 4. La famille Crossed */
+.pn { position: absolute; overflow: hidden; }
+.pn-in { position: absolute; inset: 0; overflow: hidden; }
+.pn img { transform-origin: 50% 50%; }
+.pn .tag { left: 0; bottom: 0; }
+
+/* 5. Hilton */
+.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.world-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+.tag-a, .tag-b { left: 0; top: 0; margin-top: 18px; }
+
+.cap--free[style*="max-width"] .cap-meta { max-width: none; }

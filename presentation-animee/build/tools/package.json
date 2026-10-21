@@ -1,0 +1,7 @@
+{
+  "name": "deck-tools",
+  "private": true,
+  "type": "module",
+  "description": "Outils de mesure et de recadrage des images (node measure.mjs …). npm install une fois dans ce dossier.",
+  "dependencies": { "@napi-rs/canvas": "0.1.65", "pdfjs-dist": "4.10.38" }
+}

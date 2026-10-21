@@ -1,0 +1,6 @@
+# Sources lourdes, gardées sur le disque uniquement
+*.pdf
+*.indd
+node_modules/
+.hyperframes/
+*.log
