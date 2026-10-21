@@ -98,6 +98,19 @@
       if (img && o.zoom !== false) tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 2.3, ease: 'expo.out' }, t);
     },
 
+    // Coupe diagonale (l'angle de la ligne de couverture) qui fait apparaître, ou disparaître (out), un cadre w × h.
+    diag: function (tl, el, w, h, t, dur, out, ease) {
+      var k = h * 0.896, p = { t: -k - 10 };
+      var apply = function () {
+        var a = p.t, b = p.t + k;
+        el.style.clipPath = out
+          ? 'polygon(' + b + 'px 0px, ' + (w + 2000) + 'px 0px, ' + (w + 2000) + 'px ' + h + 'px, ' + a + 'px ' + h + 'px)'
+          : 'polygon(-2000px 0px, ' + b + 'px 0px, ' + a + 'px ' + h + 'px, -2000px ' + h + 'px)';
+      };
+      if (!out) apply();
+      tl.fromTo(p, { t: -k - 10 }, { t: w + 10, duration: dur, ease: ease || 'power3.inOut', onUpdate: apply, immediateRender: false }, t);
+    },
+
     // Mouvement lent continu (caméra qui dérive) entre t0 et t1.
     drift: function (tl, el, t0, t1, from, to) {
       tl.fromTo(el, from, Object.assign({ duration: t1 - t0, ease: 'sine.inOut', immediateRender: false }, to), t0);
@@ -151,7 +164,8 @@
     var inner = frames[k].querySelector('.inner');
     var p = { t: -SLOPE - 20 };
     function apply() {
-      inner.style.clipPath = 'polygon(-2000px 0px, ' + (p.t + SLOPE) + 'px 0px, ' + p.t + 'px 1080px, -2000px 1080px)';
+      // une fois la coupe passée, plus aucun masque (un clip-path aplatirait la 3D de la scène)
+      inner.style.clipPath = p.t >= 1939 ? 'none' : 'polygon(-2000px 0px, ' + (p.t + SLOPE) + 'px 0px, ' + p.t + 'px 1080px, -2000px 1080px)';
       cutLine.setAttribute('x1', p.t + SLOPE); cutLine.setAttribute('y1', 0);
       cutLine.setAttribute('x2', p.t); cutLine.setAttribute('y2', 1080);
     }

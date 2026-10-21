@@ -26,8 +26,9 @@ PowerPoint**, dans le style de son site https://www.stephanechapelet.com/. Elle 
 5. **« Fait toutes les slides dans le cloud, même si j'éteins mon ordi »** → c'est cette session.
 
 ## Où en est le code
-- Scènes 1 à 5 : refaites en motion design (à corriger selon le point 4).
-- Scènes 6 à 28 : encore « génériques » (photos à leur place du PDF, volets, légende). **Toutes à refaire.**
+- **Les 28 scènes sont faites** en motion design (version du 21 octobre), avec les retours du point 4 appliqués :
+  légendes dans un bandeau sous les images, aucun effet de lumière, pliage de Crossed en vraie 3D avec compteur 1/5 … 5/5.
+- Reste : les retours de l'auteur après visionnage.
 
 ## Architecture (dossier `presentation-animee/`)
 - `build/slides.mjs` : contenu de chaque slide (légendes, notes, images de la version générique).

@@ -10,11 +10,13 @@ Aucune connexion internet n'est nécessaire pendant la présentation.
 ## Pendant la présentation
 | Action | Effet |
 | --- | --- |
-| Clic, →, Espace, PageSuivante (télécommande) | slide suivante |
+| Clic, →, Espace, PageSuivante (télécommande) | slide suivante (avec sa transition et son animation) |
 | ←, PagePrécédente | slide précédente |
 | F ou bouton plein écran | plein écran |
+| Bouton haut-parleur | couper / remettre les bruitages |
 | P ou bouton « Present » | mode présentateur : un onglet public plein écran, et sur votre écran la slide suivante, vos notes et un chronomètre |
 
+Chaque slide joue son animation à l'arrivée, puis continue de bouger doucement tant qu'on reste dessus.
 Les notes du présentateur se modifient directement dans le mode présentateur ; elles restent enregistrées dans ce navigateur.
 
 ## Modifier les textes
@@ -26,7 +28,9 @@ node build/build.mjs
 ```
 
 ## Contenu du dossier
-- `index.html` : la page de présentation (navigation, mode présentateur).
-- `composition/` : la composition HyperFrames (les 28 slides et leurs animations).
+- `index.html` : la page de présentation (navigation, mode présentateur, bruitages).
+- `composition/` : la composition HyperFrames (les 28 scènes et leurs animations).
 - `composition/assets/img/` : les photos extraites du PDF.
-- `build/` : le générateur (textes, styles, animations).
+- `build/` : le générateur (`slides.mjs` textes, `scenes.mjs` mise en page, `choreo.js` animations,
+  `deck.js` moteur, `deck.css` styles, `sfx.js` bruitages).
+- `TRAVAIL-EN-COURS.md` : notes techniques pour reprendre le projet.

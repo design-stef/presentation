@@ -46,11 +46,9 @@ function words(text) {
 function caption(s, i) {
   const c = s.cap;
   if (!c) return '';
-  const free = typeof c.at === 'object';
-  const cls = ['cap', free ? 'cap--free' : `cap--plate cap--${c.at}`, c.layout === 'row' ? 'cap--row' : ''].filter(Boolean).join(' ');
-  const style = free ? ` style="left:${c.at.left}px;top:${c.at.top}px${c.w ? `;max-width:${c.w}px` : ''}"` : '';
+  // Légende dans le bandeau du bas, sous les images.
   return `
-      <div class="${cls}"${style}>
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">${pad(i + 1)}</span></span><span class="tot">/${pad(N)}</span></div>
         <h2 class="cap-name">${words(c.name)}</h2>
         ${c.meta ? `<p class="cap-meta">${words(c.meta)}</p>` : ''}

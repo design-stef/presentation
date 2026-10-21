@@ -25,11 +25,9 @@
 
 :root {
   --ground: #ffffff;
-  --surface: #f4f3f1;
   --ink: #121212;
   --mute: #6f6b65;
   --mute-dark: #a8a39b;
-  --laser: #ff5a1f;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,266 +38,143 @@ html, body {
   background: var(--ground);
   color: var(--ink);
   font-family: 'Inter', sans-serif;
-  font-feature-settings: 'tnum' 0, 'ss01' 0;
   -webkit-font-smoothing: antialiased;
 }
 ::selection { background: var(--ink); color: var(--ground); }
 
 #deck { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--ground); }
 
-.scene-frame {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1920px;
-  height: 1080px;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
+.scene-frame { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; visibility: hidden; pointer-events: none; }
 .inner { position: absolute; inset: 0; overflow: hidden; background: var(--ground); }
 .scene-frame[data-theme='dark'] .inner { background: var(--ink); color: #fff; }
 
-/* Photos */
+/* La scène des images (le bandeau de légende est en dessous, de 940 à 1080). */
+.stage { position: absolute; left: 0; top: 0; width: 1920px; height: 940px; overflow: hidden; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
 .ph { position: absolute; margin: 0; overflow: hidden; }
-.ph img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+.ph img { display: block; transform-origin: 50% 50%; }
+.ph > img:only-child:not([style*='left']) { width: 100%; height: 100%; object-fit: cover; }
 
-.laser {
-  position: absolute;
-  height: 3px;
-  background: var(--laser);
-  box-shadow: 0 0 18px 4px rgba(255, 90, 31, 0.75), 0 0 2px 1px #fff3e0;
-  opacity: 0;
-  z-index: 3;
+/* Dessin technique */
+.ov { position: absolute; left: 0; top: 0; width: 1920px; height: 940px; overflow: visible; pointer-events: none; }
+.brk { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: square; }
+.tech--ink .brk, .tech--ink .dim-line, .tech--ink .dim-tick, .tech--ink .ring, .tech--ink .lead, .tech--ink .track { stroke: var(--ink); }
+.dim-line, .dim-tick { fill: none; stroke: #fff; stroke-width: 2.5; }
+.ring { fill: none; stroke-width: 2.5; }
+.lead { fill: none; stroke-width: 2; }
+.lead-dot { fill: var(--ink); }
+.arw { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: butt; stroke-linejoin: miter; }
+.track { fill: none; stroke-width: 3; }
+.axis { fill: none; stroke: #6a6a6a; stroke-width: 1.5; }
+.note {
+  position: absolute; font-size: 30px; line-height: 1; font-weight: 600; letter-spacing: -0.025em; color: var(--ink);
+  white-space: nowrap;
 }
+.note.n1 { left: 872px; top: 104px; }
+.note.n2 { left: 972px; top: 585px; }
 
-.glow {
+/* Légende : bandeau du bas, sous les images */
+.bcap {
   position: absolute;
-  left: 360px;
-  top: 470px;
-  width: 1320px;
-  height: 640px;
-  background: radial-gradient(closest-side, rgba(255, 246, 228, 0.32), rgba(255, 246, 228, 0.08) 55%, rgba(255, 246, 228, 0) 100%);
-  transform-origin: 50% 0%;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  opacity: 0;
-  z-index: 2;
-}
-
-/* Légendes */
-.cap { position: absolute; z-index: 5; max-width: 880px; color: var(--ink); }
-.cap--plate { background: var(--ground); padding: 40px 60px 50px 60px; }
-.cap--bl { left: 0; bottom: 0; }
-.cap--tl { left: 0; top: 0; }
-.cap--tr { right: 0; top: 0; }
-.cap--br { right: 0; bottom: 0; }
-.scene-frame[data-theme='dark'] .cap { color: #fff; }
-.scene-frame[data-theme='dark'] .cap--plate { background: var(--ink); }
-
-.cap-num {
+  left: 64px;
+  right: 140px;
+  top: 940px;
+  height: 140px;
   display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  margin-bottom: 20px;
-  font-size: 56px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  font-variant-numeric: tabular-nums;
+  align-items: baseline;
+  gap: 34px;
+  padding-top: 46px;
+  z-index: 5;
+  color: var(--ink);
+  white-space: nowrap;
 }
+.scene-frame[data-theme='dark'] .bcap { color: #fff; }
+.cap-num { display: flex; align-items: flex-start; gap: 3px; font-size: 40px; line-height: 1; font-weight: 600; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; }
 .mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.06em; }
 .num, .rise { display: inline-block; }
-.tot { font-size: 24px; letter-spacing: -0.02em; color: var(--mute); margin-top: 2px; }
-.scene-frame[data-theme='dark'] .tot { color: var(--mute-dark); }
-
-.cap-name {
-  font-size: 84px;
-  line-height: 0.98;
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
-}
-.cap-meta {
-  margin-top: 16px;
-  font-size: 40px;
-  line-height: 1.16;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  color: var(--mute);
-  max-width: 780px;
-  text-wrap: balance;
-}
-.scene-frame[data-theme='dark'] .cap-meta { color: var(--mute-dark); }
+.tot { font-size: 20px; letter-spacing: -0.02em; color: var(--mute); margin-top: 1px; }
+.cap-name { font-size: 50px; line-height: 1; font-weight: 600; letter-spacing: -0.045em; }
+.cap-meta { font-size: 30px; line-height: 1; font-weight: 500; letter-spacing: -0.02em; color: var(--mute); }
+.scene-frame[data-theme='dark'] .tot, .scene-frame[data-theme='dark'] .cap-meta { color: var(--mute-dark); }
 .w { display: inline-block; }
-
-.cap--row { display: flex; align-items: baseline; gap: 40px; max-width: none; }
-.cap--row .cap-num { margin: 0; align-self: flex-start; }
-.cap--row .cap-name { font-size: 64px; white-space: nowrap; }
-.cap--row .cap-meta { margin: 0; white-space: nowrap; max-width: none; }
 
 /* Couverture et fin */
 .cover { position: absolute; inset: 0; }
-.wordmark {
-  position: absolute;
-  left: 96px;
-  top: 84px;
-  font-size: 44px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-}
+.cover.cam { background: var(--ground); }
+.mframe { position: absolute; overflow: hidden; }
+.mframe .mt { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.wordmark { position: absolute; left: 96px; top: 70px; font-size: 44px; font-weight: 600; letter-spacing: -0.04em; }
 .cover-line { position: absolute; inset: 0; width: 1920px; height: 1080px; }
 .cover-line line { stroke: var(--ink); stroke-width: 3; }
-.years {
-  position: absolute;
-  left: 1296px;
-  top: 300px;
-  font-size: 96px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  font-variant-numeric: tabular-nums;
-}
-.byline {
-  position: absolute;
-  left: 1300px;
-  top: 420px;
-  font-size: 40px;
-  line-height: 1.2;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  color: var(--mute);
-}
-.cover-title {
-  position: absolute;
-  left: 84px;
-  bottom: 64px;
-  font-size: 232px;
-  line-height: 0.9;
-  font-weight: 600;
-  letter-spacing: -0.055em;
-  white-space: nowrap;
-}
-.end .cover-title { font-size: 300px; }
-.end .byline { left: 96px; top: auto; bottom: 380px; font-size: 48px; color: var(--ink); }
-
-/* Transition */
-#cut {
-  position: absolute;
-  inset: 0;
-  width: 1920px;
-  height: 1080px;
-  z-index: 20;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: difference;
-}
-#cut line { stroke: #fff; stroke-width: 3; }
-
-/* Avancement, comme sur le site */
-#progress { position: absolute; top: 0; right: 0; width: 6px; height: 1080px; z-index: 21; pointer-events: none; mix-blend-mode: difference; }
-#progress i { display: block; width: 100%; height: 100%; background: #fff; transform-origin: 50% 0%; }
-
-/* ===== Scènes recomposées ===== */
-.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
-.tag {
-  position: absolute;
-  z-index: 4;
-  background: var(--ground);
-  color: var(--ink);
-  padding: 16px 26px 18px;
-  font-size: 34px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-}
-.tag b { font-weight: 600; }
-.brk { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: square; }
-
-/* 1. Couverture */
-.cover.cam { background: var(--ground); }
-.montage .mt { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
-.montage .mt img { transform-origin: 50% 50%; }
 .y0, .count {
-  position: absolute;
-  top: 300px;
-  font-size: 96px;
-  line-height: 1;
-  font-weight: 600;
-  letter-spacing: -0.045em;
+  position: absolute; top: 300px; font-size: 96px; line-height: 1; font-weight: 600; letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
 }
 .y0 { right: 364px; }
-.count { left: 1560px; color: #fff; mix-blend-mode: difference; transform-origin: 50% 50%; z-index: 3; }
-.cover .byline { left: 1270px; }
+.count { left: 1560px; transform-origin: 50% 50%; z-index: 3; }
+.byline { position: absolute; left: 1270px; top: 420px; font-size: 40px; line-height: 1.2; font-weight: 500; letter-spacing: -0.025em; color: var(--mute); }
+.cover-title { position: absolute; left: 84px; bottom: 64px; font-size: 232px; line-height: 0.9; font-weight: 600; letter-spacing: -0.055em; white-space: nowrap; }
+.end .cover-title { font-size: 300px; }
+.end .byline { left: 96px; top: auto; bottom: 380px; font-size: 48px; color: var(--ink); }
 
-/* 2. Crossed, principe */
-.sheet { position: absolute; transform-origin: 40% 50%; }
-.band { position: absolute; left: 0; width: 100%; height: 26px; background: var(--ink); opacity: 0; }
-.laser-head {
-  position: absolute; left: 0; top: 0; width: 4px; height: 80px; margin-left: -2px;
-  background: #fff3e0;
-  box-shadow: 0 0 16px 6px rgba(255, 90, 31, 0.9), 0 0 44px 14px rgba(255, 90, 31, 0.4);
-  opacity: 0;
+/* 2. Crossed : tôle pliée en 3D */
+.f3-scene { position: absolute; inset: 0; perspective: 2600px; perspective-origin: 50% 40%; }
+.f3-cam { position: absolute; left: 0; top: 0; width: 720px; height: 921px; transform-style: preserve-3d; transform-origin: 50% 50%; }
+.f3-flat { position: absolute; inset: 0; overflow: hidden; }
+.f3-flat img { position: absolute; }
+.cut-head { position: absolute; left: 0; top: 0; width: 3px; height: 77px; margin-left: -1px; background: var(--ink); opacity: 0; }
+.f3 { position: absolute; left: 0; width: 720px; transform-style: preserve-3d; background-repeat: no-repeat; backface-visibility: visible; }
+.f3.root, .f3.down { transform-origin: 50% 0%; }
+.f3.down { top: 100%; }
+.f3.up { bottom: 100%; transform-origin: 50% 100%; }
+.fnum {
+  position: absolute; left: -78px; width: 52px; height: 52px; border-radius: 50%; background: var(--ink); color: #fff;
+  font-size: 28px; font-weight: 600; line-height: 52px; text-align: center; font-style: normal;
 }
-.spark {
-  position: absolute; left: 0; top: 0; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%;
-  background: #ffc27d; box-shadow: 0 0 6px 2px rgba(255, 120, 40, 0.85); opacity: 0;
-}
-.scan {
-  position: absolute; left: 0; top: 0; width: 100%; height: 3px;
-  background: var(--laser); box-shadow: 0 0 14px 3px rgba(255, 90, 31, 0.55); opacity: 0;
-}
-.fold-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; overflow: visible; z-index: 2; }
-.profile { fill: none; stroke: var(--ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
-.fold-num circle { fill: var(--ink); }
-.fold-num text { fill: #fff; font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 600; text-anchor: middle; }
+.f3.up .fnum { bottom: -26px; }
+.f3.down .fnum { top: -26px; }
 
-/* 3. Crossed de nuit */
-#sc-crossed-nuit .cam img { position: absolute; inset: 0; width: 1920px; height: 1080px; }
-#sc-crossed-nuit .dark {
-  position: absolute; inset: 0; background: url('assets/img/p03-a.jpg') center / 100% 100% no-repeat;
-  --r1: 0px; --r2: 0px; --r3: 0px; --r4: 0px;
-  filter: brightness(0.07) saturate(0.35);
-  -webkit-mask-image:
-    radial-gradient(circle at 115px 662px, transparent calc(var(--r1) - 240px), #000 var(--r1)),
-    radial-gradient(circle at 1728px 624px, transparent calc(var(--r2) - 240px), #000 var(--r2)),
-    radial-gradient(circle at 1000px 880px, transparent calc(var(--r3) - 320px), #000 var(--r3)),
-    radial-gradient(circle at 960px 540px, transparent calc(var(--r4) - 500px), #000 var(--r4));
-  mask-image:
-    radial-gradient(circle at 115px 662px, transparent calc(var(--r1) - 240px), #000 var(--r1)),
-    radial-gradient(circle at 1728px 624px, transparent calc(var(--r2) - 240px), #000 var(--r2)),
-    radial-gradient(circle at 1000px 880px, transparent calc(var(--r3) - 320px), #000 var(--r3)),
-    radial-gradient(circle at 960px 540px, transparent calc(var(--r4) - 500px), #000 var(--r4));
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-}
-.spot {
-  position: absolute; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 220, 150, 0.85), rgba(255, 170, 60, 0.28) 45%, rgba(255, 170, 60, 0) 100%);
-  mix-blend-mode: screen; opacity: 0; pointer-events: none;
-}
-.spot--wide { width: 1100px; height: 460px; margin: -230px 0 0 -550px; }
-.bigword {
-  position: absolute; left: 0; right: 0; top: 380px; z-index: 3;
-  text-align: center; color: #fff;
-  font-size: 300px; line-height: 1; font-weight: 600; letter-spacing: -0.05em;
-}
-.ch { display: inline-block; }
+/* Bandes, planches, lattes : une même photo découpée */
+.strip, .plank, .slat { position: absolute; background-repeat: no-repeat; }
+.slats { position: absolute; }
+.obj { position: absolute; background-repeat: no-repeat; }
 
-/* 4. La famille Crossed */
+/* 4, 26. Colonnes */
 .pn { position: absolute; overflow: hidden; }
 .pn-in { position: absolute; inset: 0; overflow: hidden; }
-.pn img { transform-origin: 50% 50%; }
-.pn .tag { left: 0; bottom: 0; }
 
 /* 5. Hilton */
-.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
-.world-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
-.tag-a, .tag-b { left: 0; top: 0; margin-top: 18px; }
+.world { position: absolute; left: 0; top: 0; width: 1920px; height: 940px; transform-origin: 0 0; }
 
-.cap--free[style*="max-width"] .cap-meta { max-width: none; }
+/* 6. Zadig */
+.perf { position: absolute; inset: 0; width: 1920px; height: 940px; }
+
+/* 7. Zadig, Bergen et Milan */
+.detail { z-index: 3; transform-origin: 50% 50%; }
+
+/* 16. Djeddah */
+.aer { position: absolute; inset: 0; z-index: 2; }
+.aer img { position: absolute; left: 0; top: 0; width: 624px; height: 1080px; transform-origin: 0 0; }
+
+/* 22. Monaco */
+.dusk { z-index: 3; transform-origin: 50% 50%; }
+
+/* Transition */
+#cut { position: absolute; inset: 0; width: 1920px; height: 1080px; z-index: 40; pointer-events: none; opacity: 0; mix-blend-mode: difference; }
+#cut line { stroke: #fff; stroke-width: 3; }
+
+/* Avancement, comme sur le site */
+#progress { position: absolute; top: 0; right: 0; width: 6px; height: 1080px; z-index: 41; pointer-events: none; mix-blend-mode: difference; }
+#progress i { display: block; width: 100%; height: 100%; background: #fff; transform-origin: 50% 0%; }
+.fnum { display: none; }
+.fold-count {
+  position: absolute; left: 1560px; top: 110px; display: flex; align-items: flex-start; gap: 6px; z-index: 3;
+  font-size: 200px; line-height: 1; font-weight: 600; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; opacity: 0;
+}
+.fold-count .mask { height: 1em; padding: 0; }
+.fc-strip { display: block; }
+.fc-strip span { display: block; height: 1em; }
+.fc-tot { font-size: 64px; color: var(--mute); margin-top: 18px; letter-spacing: -0.03em; }
 
     </style>
   </head>
@@ -484,7 +359,7 @@ html, body {
     <div id="sc-cover" class="scene-frame clip" data-composition-id="cover" data-start="0" data-duration="11" data-track-index="1" data-label="Couverture" data-theme="light" style="z-index:1">
       <div class="inner">
       <div class="cover cam" data-layout-allow-overlap>
-        <div class="montage"><div class="mt" data-k="0"><img class="" src="assets/img/p03-a.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:1920.0px;height:1080.0px" /></div><div class="mt" data-k="1"><img class="" src="assets/img/p06-a.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:1920.0px;height:1080.0px" /></div><div class="mt" data-k="2"><img class="" src="assets/img/p09-a.jpg" alt="" style="position:absolute;left:0.0px;top:-367.1px;width:1920.0px;height:1649.2px" /></div><div class="mt" data-k="3"><img class="" src="assets/img/p07-b.jpg" alt="" style="position:absolute;left:0.0px;top:-415.2px;width:1920.0px;height:1736.7px" /></div><div class="mt" data-k="4"><img class="" src="assets/img/p10-a.jpg" alt="" style="position:absolute;left:0.0px;top:-217.9px;width:1920.0px;height:1378.0px" /></div><div class="mt" data-k="5"><img class="" src="assets/img/p13-a.jpg" alt="" style="position:absolute;left:0.0px;top:-252.3px;width:1920.0px;height:1440.5px" /></div><div class="mt" data-k="6"><img class="" src="assets/img/p15-a.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:1920.0px;height:1080.0px" /></div><div class="mt" data-k="7"><img class="" src="assets/img/p16-a.jpg" alt="" style="position:absolute;left:0.0px;top:-341.8px;width:1920.0px;height:1603.3px" /></div><div class="mt" data-k="8"><img class="" src="assets/img/p22-c.jpg" alt="" style="position:absolute;left:0.0px;top:-648.0px;width:1920.0px;height:2160.0px" /></div><div class="mt" data-k="9"><img class="" src="assets/img/p05-a.jpg" alt="" style="position:absolute;left:0.0px;top:-648.0px;width:1920.0px;height:2160.0px" /></div><div class="mt" data-k="10"><img class="" src="assets/img/p26-b.jpg" alt="" style="position:absolute;left:0.0px;top:-1242.0px;width:1920.0px;height:3240.0px" /></div><div class="mt" data-k="11"><img class="" src="assets/img/p24-a.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:1920.0px;height:1080.0px" /></div></div>
+        <div class="mframe" style="left:96px;top:140px;width:1180px;height:664px"><div class="mt" data-k="0"><img class="" src="assets/img/p03-a.jpg" alt="" style="position:absolute;left:-0.2px;top:0.0px;width:1180.4px;height:664.0px" /></div><div class="mt" data-k="1"><img class="" src="assets/img/p06-a.jpg" alt="" style="position:absolute;left:-0.2px;top:0.0px;width:1180.4px;height:664.0px" /></div><div class="mt" data-k="2"><img class="" src="assets/img/p09-a.jpg" alt="" style="position:absolute;left:0.0px;top:-276.1px;width:1180.0px;height:1013.6px" /></div><div class="mt" data-k="3"><img class="" src="assets/img/p07-b.jpg" alt="" style="position:absolute;left:0.0px;top:-308.4px;width:1180.0px;height:1067.3px" /></div><div class="mt" data-k="4"><img class="" src="assets/img/p10-a.jpg" alt="" style="position:absolute;left:0.0px;top:-176.2px;width:1180.0px;height:846.9px" /></div><div class="mt" data-k="5"><img class="" src="assets/img/p13-a.jpg" alt="" style="position:absolute;left:0.0px;top:-199.2px;width:1180.0px;height:885.3px" /></div><div class="mt" data-k="6"><img class="" src="assets/img/p15-a.jpg" alt="" style="position:absolute;left:-0.2px;top:0.0px;width:1180.4px;height:664.0px" /></div><div class="mt" data-k="7"><img class="" src="assets/img/p16-a.jpg" alt="" style="position:absolute;left:0.0px;top:-259.2px;width:1180.0px;height:985.4px" /></div><div class="mt" data-k="8"><img class="" src="assets/img/p22-c.jpg" alt="" style="position:absolute;left:0.0px;top:-464.5px;width:1180.0px;height:1327.5px" /></div><div class="mt" data-k="9"><img class="" src="assets/img/p05-a.jpg" alt="" style="position:absolute;left:0.0px;top:-464.5px;width:1180.0px;height:1327.5px" /></div><div class="mt" data-k="10"><img class="" src="assets/img/p26-b.jpg" alt="" style="position:absolute;left:0.0px;top:-862.8px;width:1180.0px;height:1991.3px" /></div><div class="mt" data-k="11"><img class="" src="assets/img/p24-a.jpg" alt="" style="position:absolute;left:-0.2px;top:0.0px;width:1180.4px;height:664.0px" /></div></div>
         <p class="wordmark">Chapelet.</p>
         <svg class="cover-line" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="881" y1="792" x2="1253" y2="377" /></svg>
         <p class="y0">2008–</p>
@@ -497,20 +372,17 @@ html, body {
 
     <div id="sc-crossed-principe" class="scene-frame clip" data-composition-id="crossed-principe" data-start="10" data-duration="11" data-track-index="1" data-label="Crossed, principe" data-theme="light" style="z-index:2">
       <div class="inner">
-      <div class="sheet" style="left:150px;top:50px;width:860px;height:960px">
-        <img src="assets/img/p02-panel.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" />
-        <i class="band" data-k="0" style="top:52px"></i><i class="band" data-k="1" style="top:209px"></i><i class="band" data-k="2" style="top:349px"></i><i class="band" data-k="3" style="top:544px"></i><i class="band" data-k="4" style="top:884px"></i>
-        <i class="laser-head"></i>
-        <i class="spark" data-k="0"></i><i class="spark" data-k="1"></i><i class="spark" data-k="2"></i><i class="spark" data-k="3"></i><i class="spark" data-k="4"></i><i class="spark" data-k="5"></i><i class="spark" data-k="6"></i><i class="spark" data-k="7"></i><i class="spark" data-k="8"></i><i class="spark" data-k="9"></i><i class="spark" data-k="10"></i><i class="spark" data-k="11"></i><i class="spark" data-k="12"></i><i class="spark" data-k="13"></i><i class="spark" data-k="14"></i><i class="spark" data-k="15"></i><i class="spark" data-k="16"></i><i class="spark" data-k="17"></i><i class="spark" data-k="18"></i><i class="spark" data-k="19"></i><i class="spark" data-k="20"></i><i class="spark" data-k="21"></i><i class="spark" data-k="22"></i><i class="spark" data-k="23"></i><i class="spark" data-k="24"></i><i class="spark" data-k="25"></i><i class="spark" data-k="26"></i><i class="spark" data-k="27"></i><i class="spark" data-k="28"></i><i class="spark" data-k="29"></i>
-        <i class="scan"></i>
+      <div class="stage">
+        <div class="f3-scene">
+          <div class="f3-cam">
+            <div class="f3-flat"><img class="" src="assets/img/p02-panel.jpg" alt="" style="position:absolute;left:-45.0px;top:-22.0px;width:860.0px;height:960.0px" /><i class="cut-head"></i></div>
+            <div class="f3 root s4" style="top:535px;height:340px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -557.0px"><div class="f3 up s3" style="height:195px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -362.0px"><b class="fnum">4</b><div class="f3 up s2" style="height:140px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -222.0px"><b class="fnum">3</b><div class="f3 up s1" style="height:157px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -65.0px"><b class="fnum">2</b><div class="f3 up s0" style="height:43px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -22.0px"><b class="fnum">1</b></div></div></div></div><div class="f3 down s5" style="height:46px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -897.0px"><b class="fnum">5</b></div></div>
+          </div>
+        </div>
+        <p class="fold-count"><span class="mask"><span class="fc-strip"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></span></span><span class="fc-tot">/5</span></p>
       </div>
-      <figure class="ph fold-img" style="left:1150px;top:420px;width:640px;height:450px"><img src="assets/img/p02-fold.jpg" alt="" /></figure>
-      <svg class="fold-svg" viewBox="0 0 1920 1080" aria-hidden="true">
-        <polyline class="profile" points="" />
-        <g class="fold-num" data-k="0"><g class="fn-in"><circle r="19" /><text dy="7">5</text></g></g><g class="fold-num" data-k="1"><g class="fn-in"><circle r="19" /><text dy="7">4</text></g></g><g class="fold-num" data-k="2"><g class="fn-in"><circle r="19" /><text dy="7">3</text></g></g><g class="fold-num" data-k="3"><g class="fn-in"><circle r="19" /><text dy="7">2</text></g></g><g class="fold-num" data-k="4"><g class="fn-in"><circle r="19" /><text dy="7">1</text></g></g>
-      </svg>
       
-      <div class="cap cap--free" style="left:1160px;top:64px">
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">02</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Crossed</span></h2>
         <p class="cap-meta"><span class="w">Une</span> <span class="w">tôle</span> <span class="w">d'acier</span> <span class="w">découpée</span> <span class="w">au</span> <span class="w">laser,</span> <span class="w">pliée</span> <span class="w">en</span> <span class="w">cinq</span> <span class="w">temps</span></p>
@@ -520,16 +392,10 @@ html, body {
 
     <div id="sc-crossed-nuit" class="scene-frame clip" data-composition-id="crossed-nuit" data-start="20" data-duration="11" data-track-index="1" data-label="Crossed bench" data-theme="dark" style="z-index:3">
       <div class="inner">
-      <div class="cam">
-        <img class="lit" src="assets/img/p03-a.jpg" alt="" />
-        <div class="dark"></div>
-        <i class="spot" style="left:115px;top:662px"></i>
-        <i class="spot" style="left:1728px;top:624px"></i>
-        <i class="spot spot--wide" style="left:1000px;top:880px"></i>
-      </div>
-      <p class="bigword"><span class="ch">C</span><span class="ch">R</span><span class="ch">O</span><span class="ch">S</span><span class="ch">S</span><span class="ch">E</span><span class="ch">D</span></p>
+      <div class="stage"><div class="cam"><i class="strip" data-k="0" style="left:0px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:0.0px -140.0px"></i><i class="strip" data-k="1" style="left:160px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-160.0px -140.0px"></i><i class="strip" data-k="2" style="left:320px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-320.0px -140.0px"></i><i class="strip" data-k="3" style="left:480px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-480.0px -140.0px"></i><i class="strip" data-k="4" style="left:640px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-640.0px -140.0px"></i><i class="strip" data-k="5" style="left:800px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-800.0px -140.0px"></i><i class="strip" data-k="6" style="left:960px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-960.0px -140.0px"></i><i class="strip" data-k="7" style="left:1120px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-1120.0px -140.0px"></i><i class="strip" data-k="8" style="left:1280px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-1280.0px -140.0px"></i><i class="strip" data-k="9" style="left:1440px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-1440.0px -140.0px"></i><i class="strip" data-k="10" style="left:1600px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-1600.0px -140.0px"></i><i class="strip" data-k="11" style="left:1760px;top:0px;width:160px;height:940px;background-image:url('assets/img/p03-a.jpg');background-size:1920.0px 1080.0px;background-position:-1760.0px -140.0px"></i>
+        <svg class="ov bk" viewBox="0 0 1920 940" aria-hidden="true"><path class="brk" d="M530 306V270H566" /><path class="brk" d="M1574 270H1610V306" /><path class="brk" d="M1610 824V860H1574" /><path class="brk" d="M566 860H530V824" /></svg></div></div>
       
-      <div class="cap cap--plate cap--bl">
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">03</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Crossed</span> <span class="w">bench</span></h2>
         <p class="cap-meta"><span class="w">Lab23</span> <span class="w">·</span> <span class="w">acier</span> <span class="w">découpé,</span> <span class="w">éclairé</span> <span class="w">par</span> <span class="w">dessous</span></p>
@@ -539,21 +405,13 @@ html, body {
 
     <div id="sc-crossed-famille" class="scene-frame clip" data-composition-id="crossed-famille" data-start="30" data-duration="11" data-track-index="1" data-label="La famille Crossed" data-theme="light" style="z-index:4">
       <div class="inner">
-      
-      <div class="pn" data-k="0" style="left:0px;top:330px;width:628px;height:750px">
-        <div class="pn-in"><img class="" src="assets/img/p04-b.jpg" alt="" style="position:absolute;left:-620.9px;top:0.0px;width:1763.9px;height:750.0px" /></div>
-        <p class="tag"><b><span class="w">Jardinière</span></b> <span class="w">Barcelone</span></p>
-      </div>
-      <div class="pn" data-k="1" style="left:646px;top:330px;width:628px;height:750px">
-        <div class="pn-in"><img class="" src="assets/img/p04-a.jpg" alt="" style="position:absolute;left:-515.0px;top:0.0px;width:1763.9px;height:750.0px" /></div>
-        <p class="tag"><b><span class="w">Siège</span></b> <span class="w">Capri</span></p>
-      </div>
-      <div class="pn" data-k="2" style="left:1292px;top:330px;width:628px;height:750px">
-        <div class="pn-in"><img class="" src="assets/img/p04-c.jpg" alt="" style="position:absolute;left:-15.7px;top:-238.2px;width:659.4px;height:989.1px" /></div>
-        <p class="tag"><b><span class="w">Corbeille</span></b> <span class="w">Crossed</span></p>
+      <div class="stage">
+        <div class="pn" data-k="0" style="left:0px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-b.jpg" alt="" style="position:absolute;left:-857.7px;top:0.0px;width:2210.7px;height:940.0px" /></div></div>
+        <div class="pn" data-k="1" style="left:646px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-a.jpg" alt="" style="position:absolute;left:-725.0px;top:0.0px;width:2210.7px;height:940.0px" /></div></div>
+        <div class="pn" data-k="2" style="left:1292px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-c.jpg" alt="" style="position:absolute;left:0.0px;top:-2.0px;width:628.0px;height:942.0px" /></div></div>
       </div>
       
-      <div class="cap cap--free" style="left:80px;top:64px;max-width:1760px">
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">04</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">La</span> <span class="w">famille</span> <span class="w">Crossed</span></h2>
         <p class="cap-meta"><span class="w">Jardinières</span> <span class="w">à</span> <span class="w">Barcelone,</span> <span class="w">siège</span> <span class="w">à</span> <span class="w">Capri,</span> <span class="w">corbeille</span></p>
@@ -563,19 +421,14 @@ html, body {
 
     <div id="sc-hilton" class="scene-frame clip" data-composition-id="hilton" data-start="40" data-duration="11" data-track-index="1" data-label="Hilton" data-theme="light" style="z-index:5">
       <div class="inner">
-      <div class="world">
-        <figure class="ph" style="left:0px;top:0px;width:960px;height:1080px"><img src="assets/img/p05-a.jpg" alt="" /></figure>
-        <figure class="ph" style="left:960px;top:0px;width:960px;height:680px"><img src="assets/img/p05-b.jpg" alt="" /></figure>
-        <figure class="ph" style="left:960px;top:570px;width:960px;height:510px"><img src="assets/img/p05-c.jpg" alt="" /></figure>
-        <svg class="world-svg" viewBox="0 0 1920 1080" aria-hidden="true">
-          <g class="bk bk-a"><path class="brk" d="M60 596V560H96" /><path class="brk" d="M564 560H600V596" /><path class="brk" d="M600 744V780H564" /><path class="brk" d="M96 780H60V744" /></g>
-          <g class="bk bk-b"><path class="brk" d="M1200 156V120H1236" /><path class="brk" d="M1504 120H1540V156" /><path class="brk" d="M1540 374V410H1504" /><path class="brk" d="M1236 410H1200V374" /></g>
-        </svg>
-      </div>
-      <p class="tag tag-a"><b>Banc et corbeille</b> Hilton Lac-Leamy</p>
-      <p class="tag tag-b"><b>Jardinière</b> entrée de l'hôtel</p>
+      <div class="stage"><div class="world">
+        <figure class="ph " style="left:0px;top:0px;width:940px;height:940px"><img class="" src="assets/img/p05-a.jpg" alt="" style="position:absolute;left:0.0px;top:-117.5px;width:940.0px;height:1057.5px" /></figure>
+        <figure class="ph " style="left:950px;top:0px;width:970px;height:465px"><img class="" src="assets/img/p05-b.jpg" alt="" style="position:absolute;left:0.0px;top:-60.6px;width:970.0px;height:687.1px" /></figure>
+        <figure class="ph " style="left:950px;top:475px;width:970px;height:465px"><img class="" src="assets/img/p05-c.jpg" alt="" style="position:absolute;left:-0.0px;top:-25.2px;width:970.0px;height:515.3px" /></figure>
+        <svg class="ov " viewBox="0 0 1920 940" aria-hidden="true"><g class="bk-a"><path class="brk" d="M45 451V415H81" /><path class="brk" d="M569 415H605V451" /><path class="brk" d="M605 629V665H569" /><path class="brk" d="M81 665H45V629" /></g><g class="bk-b"><path class="brk" d="M1180 81V45H1216" /><path class="brk" d="M1514 45H1550V81" /><path class="brk" d="M1550 339V375H1514" /><path class="brk" d="M1216 375H1180V339" /></g></svg>
+      </div></div>
       
-      <div class="cap cap--plate cap--bl">
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">05</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Hilton</span> <span class="w">Lac-Leamy</span></h2>
         <p class="cap-meta"><span class="w">Canada</span> <span class="w">·</span> <span class="w">bancs,</span> <span class="w">corbeilles</span> <span class="w">et</span> <span class="w">jardinières</span></p>
@@ -585,8 +438,14 @@ html, body {
 
     <div id="sc-zadig" class="scene-frame clip" data-composition-id="zadig" data-start="50" data-duration="11" data-track-index="1" data-label="Zadig" data-theme="dark" style="z-index:6">
       <div class="inner">
-      <figure class="ph" data-rv="light" data-o="0" data-w="1920" data-h="1080" style="left:0px;top:0px;width:1920px;height:1080px"><img src="assets/img/p06-a.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--tl">
+      <div class="stage"><div class="cam">
+        <svg class="perf" viewBox="0 0 1920 940" aria-hidden="true">
+          <defs><mask id="perf-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="940"><rect width="1920" height="940" fill="#000" /><g fill="#fff"><circle cx="0" cy="0" r="0" /><circle cx="60" cy="0" r="0" /><circle cx="120" cy="0" r="0" /><circle cx="180" cy="0" r="0" /><circle cx="240" cy="0" r="0" /><circle cx="300" cy="0" r="0" /><circle cx="360" cy="0" r="0" /><circle cx="420" cy="0" r="0" /><circle cx="480" cy="0" r="0" /><circle cx="540" cy="0" r="0" /><circle cx="600" cy="0" r="0" /><circle cx="660" cy="0" r="0" /><circle cx="720" cy="0" r="0" /><circle cx="780" cy="0" r="0" /><circle cx="840" cy="0" r="0" /><circle cx="900" cy="0" r="0" /><circle cx="960" cy="0" r="0" /><circle cx="1020" cy="0" r="0" /><circle cx="1080" cy="0" r="0" /><circle cx="1140" cy="0" r="0" /><circle cx="1200" cy="0" r="0" /><circle cx="1260" cy="0" r="0" /><circle cx="1320" cy="0" r="0" /><circle cx="1380" cy="0" r="0" /><circle cx="1440" cy="0" r="0" /><circle cx="1500" cy="0" r="0" /><circle cx="1560" cy="0" r="0" /><circle cx="1620" cy="0" r="0" /><circle cx="1680" cy="0" r="0" /><circle cx="1740" cy="0" r="0" /><circle cx="1800" cy="0" r="0" /><circle cx="1860" cy="0" r="0" /><circle cx="1920" cy="0" r="0" /><circle cx="0" cy="60" r="0" /><circle cx="60" cy="60" r="0" /><circle cx="120" cy="60" r="0" /><circle cx="180" cy="60" r="0" /><circle cx="240" cy="60" r="0" /><circle cx="300" cy="60" r="0" /><circle cx="360" cy="60" r="0" /><circle cx="420" cy="60" r="0" /><circle cx="480" cy="60" r="0" /><circle cx="540" cy="60" r="0" /><circle cx="600" cy="60" r="0" /><circle cx="660" cy="60" r="0" /><circle cx="720" cy="60" r="0" /><circle cx="780" cy="60" r="0" /><circle cx="840" cy="60" r="0" /><circle cx="900" cy="60" r="0" /><circle cx="960" cy="60" r="0" /><circle cx="1020" cy="60" r="0" /><circle cx="1080" cy="60" r="0" /><circle cx="1140" cy="60" r="0" /><circle cx="1200" cy="60" r="0" /><circle cx="1260" cy="60" r="0" /><circle cx="1320" cy="60" r="0" /><circle cx="1380" cy="60" r="0" /><circle cx="1440" cy="60" r="0" /><circle cx="1500" cy="60" r="0" /><circle cx="1560" cy="60" r="0" /><circle cx="1620" cy="60" r="0" /><circle cx="1680" cy="60" r="0" /><circle cx="1740" cy="60" r="0" /><circle cx="1800" cy="60" r="0" /><circle cx="1860" cy="60" r="0" /><circle cx="1920" cy="60" r="0" /><circle cx="0" cy="120" r="0" /><circle cx="60" cy="120" r="0" /><circle cx="120" cy="120" r="0" /><circle cx="180" cy="120" r="0" /><circle cx="240" cy="120" r="0" /><circle cx="300" cy="120" r="0" /><circle cx="360" cy="120" r="0" /><circle cx="420" cy="120" r="0" /><circle cx="480" cy="120" r="0" /><circle cx="540" cy="120" r="0" /><circle cx="600" cy="120" r="0" /><circle cx="660" cy="120" r="0" /><circle cx="720" cy="120" r="0" /><circle cx="780" cy="120" r="0" /><circle cx="840" cy="120" r="0" /><circle cx="900" cy="120" r="0" /><circle cx="960" cy="120" r="0" /><circle cx="1020" cy="120" r="0" /><circle cx="1080" cy="120" r="0" /><circle cx="1140" cy="120" r="0" /><circle cx="1200" cy="120" r="0" /><circle cx="1260" cy="120" r="0" /><circle cx="1320" cy="120" r="0" /><circle cx="1380" cy="120" r="0" /><circle cx="1440" cy="120" r="0" /><circle cx="1500" cy="120" r="0" /><circle cx="1560" cy="120" r="0" /><circle cx="1620" cy="120" r="0" /><circle cx="1680" cy="120" r="0" /><circle cx="1740" cy="120" r="0" /><circle cx="1800" cy="120" r="0" /><circle cx="1860" cy="120" r="0" /><circle cx="1920" cy="120" r="0" /><circle cx="0" cy="180" r="0" /><circle cx="60" cy="180" r="0" /><circle cx="120" cy="180" r="0" /><circle cx="180" cy="180" r="0" /><circle cx="240" cy="180" r="0" /><circle cx="300" cy="180" r="0" /><circle cx="360" cy="180" r="0" /><circle cx="420" cy="180" r="0" /><circle cx="480" cy="180" r="0" /><circle cx="540" cy="180" r="0" /><circle cx="600" cy="180" r="0" /><circle cx="660" cy="180" r="0" /><circle cx="720" cy="180" r="0" /><circle cx="780" cy="180" r="0" /><circle cx="840" cy="180" r="0" /><circle cx="900" cy="180" r="0" /><circle cx="960" cy="180" r="0" /><circle cx="1020" cy="180" r="0" /><circle cx="1080" cy="180" r="0" /><circle cx="1140" cy="180" r="0" /><circle cx="1200" cy="180" r="0" /><circle cx="1260" cy="180" r="0" /><circle cx="1320" cy="180" r="0" /><circle cx="1380" cy="180" r="0" /><circle cx="1440" cy="180" r="0" /><circle cx="1500" cy="180" r="0" /><circle cx="1560" cy="180" r="0" /><circle cx="1620" cy="180" r="0" /><circle cx="1680" cy="180" r="0" /><circle cx="1740" cy="180" r="0" /><circle cx="1800" cy="180" r="0" /><circle cx="1860" cy="180" r="0" /><circle cx="1920" cy="180" r="0" /><circle cx="0" cy="240" r="0" /><circle cx="60" cy="240" r="0" /><circle cx="120" cy="240" r="0" /><circle cx="180" cy="240" r="0" /><circle cx="240" cy="240" r="0" /><circle cx="300" cy="240" r="0" /><circle cx="360" cy="240" r="0" /><circle cx="420" cy="240" r="0" /><circle cx="480" cy="240" r="0" /><circle cx="540" cy="240" r="0" /><circle cx="600" cy="240" r="0" /><circle cx="660" cy="240" r="0" /><circle cx="720" cy="240" r="0" /><circle cx="780" cy="240" r="0" /><circle cx="840" cy="240" r="0" /><circle cx="900" cy="240" r="0" /><circle cx="960" cy="240" r="0" /><circle cx="1020" cy="240" r="0" /><circle cx="1080" cy="240" r="0" /><circle cx="1140" cy="240" r="0" /><circle cx="1200" cy="240" r="0" /><circle cx="1260" cy="240" r="0" /><circle cx="1320" cy="240" r="0" /><circle cx="1380" cy="240" r="0" /><circle cx="1440" cy="240" r="0" /><circle cx="1500" cy="240" r="0" /><circle cx="1560" cy="240" r="0" /><circle cx="1620" cy="240" r="0" /><circle cx="1680" cy="240" r="0" /><circle cx="1740" cy="240" r="0" /><circle cx="1800" cy="240" r="0" /><circle cx="1860" cy="240" r="0" /><circle cx="1920" cy="240" r="0" /><circle cx="0" cy="300" r="0" /><circle cx="60" cy="300" r="0" /><circle cx="120" cy="300" r="0" /><circle cx="180" cy="300" r="0" /><circle cx="240" cy="300" r="0" /><circle cx="300" cy="300" r="0" /><circle cx="360" cy="300" r="0" /><circle cx="420" cy="300" r="0" /><circle cx="480" cy="300" r="0" /><circle cx="540" cy="300" r="0" /><circle cx="600" cy="300" r="0" /><circle cx="660" cy="300" r="0" /><circle cx="720" cy="300" r="0" /><circle cx="780" cy="300" r="0" /><circle cx="840" cy="300" r="0" /><circle cx="900" cy="300" r="0" /><circle cx="960" cy="300" r="0" /><circle cx="1020" cy="300" r="0" /><circle cx="1080" cy="300" r="0" /><circle cx="1140" cy="300" r="0" /><circle cx="1200" cy="300" r="0" /><circle cx="1260" cy="300" r="0" /><circle cx="1320" cy="300" r="0" /><circle cx="1380" cy="300" r="0" /><circle cx="1440" cy="300" r="0" /><circle cx="1500" cy="300" r="0" /><circle cx="1560" cy="300" r="0" /><circle cx="1620" cy="300" r="0" /><circle cx="1680" cy="300" r="0" /><circle cx="1740" cy="300" r="0" /><circle cx="1800" cy="300" r="0" /><circle cx="1860" cy="300" r="0" /><circle cx="1920" cy="300" r="0" /><circle cx="0" cy="360" r="0" /><circle cx="60" cy="360" r="0" /><circle cx="120" cy="360" r="0" /><circle cx="180" cy="360" r="0" /><circle cx="240" cy="360" r="0" /><circle cx="300" cy="360" r="0" /><circle cx="360" cy="360" r="0" /><circle cx="420" cy="360" r="0" /><circle cx="480" cy="360" r="0" /><circle cx="540" cy="360" r="0" /><circle cx="600" cy="360" r="0" /><circle cx="660" cy="360" r="0" /><circle cx="720" cy="360" r="0" /><circle cx="780" cy="360" r="0" /><circle cx="840" cy="360" r="0" /><circle cx="900" cy="360" r="0" /><circle cx="960" cy="360" r="0" /><circle cx="1020" cy="360" r="0" /><circle cx="1080" cy="360" r="0" /><circle cx="1140" cy="360" r="0" /><circle cx="1200" cy="360" r="0" /><circle cx="1260" cy="360" r="0" /><circle cx="1320" cy="360" r="0" /><circle cx="1380" cy="360" r="0" /><circle cx="1440" cy="360" r="0" /><circle cx="1500" cy="360" r="0" /><circle cx="1560" cy="360" r="0" /><circle cx="1620" cy="360" r="0" /><circle cx="1680" cy="360" r="0" /><circle cx="1740" cy="360" r="0" /><circle cx="1800" cy="360" r="0" /><circle cx="1860" cy="360" r="0" /><circle cx="1920" cy="360" r="0" /><circle cx="0" cy="420" r="0" /><circle cx="60" cy="420" r="0" /><circle cx="120" cy="420" r="0" /><circle cx="180" cy="420" r="0" /><circle cx="240" cy="420" r="0" /><circle cx="300" cy="420" r="0" /><circle cx="360" cy="420" r="0" /><circle cx="420" cy="420" r="0" /><circle cx="480" cy="420" r="0" /><circle cx="540" cy="420" r="0" /><circle cx="600" cy="420" r="0" /><circle cx="660" cy="420" r="0" /><circle cx="720" cy="420" r="0" /><circle cx="780" cy="420" r="0" /><circle cx="840" cy="420" r="0" /><circle cx="900" cy="420" r="0" /><circle cx="960" cy="420" r="0" /><circle cx="1020" cy="420" r="0" /><circle cx="1080" cy="420" r="0" /><circle cx="1140" cy="420" r="0" /><circle cx="1200" cy="420" r="0" /><circle cx="1260" cy="420" r="0" /><circle cx="1320" cy="420" r="0" /><circle cx="1380" cy="420" r="0" /><circle cx="1440" cy="420" r="0" /><circle cx="1500" cy="420" r="0" /><circle cx="1560" cy="420" r="0" /><circle cx="1620" cy="420" r="0" /><circle cx="1680" cy="420" r="0" /><circle cx="1740" cy="420" r="0" /><circle cx="1800" cy="420" r="0" /><circle cx="1860" cy="420" r="0" /><circle cx="1920" cy="420" r="0" /><circle cx="0" cy="480" r="0" /><circle cx="60" cy="480" r="0" /><circle cx="120" cy="480" r="0" /><circle cx="180" cy="480" r="0" /><circle cx="240" cy="480" r="0" /><circle cx="300" cy="480" r="0" /><circle cx="360" cy="480" r="0" /><circle cx="420" cy="480" r="0" /><circle cx="480" cy="480" r="0" /><circle cx="540" cy="480" r="0" /><circle cx="600" cy="480" r="0" /><circle cx="660" cy="480" r="0" /><circle cx="720" cy="480" r="0" /><circle cx="780" cy="480" r="0" /><circle cx="840" cy="480" r="0" /><circle cx="900" cy="480" r="0" /><circle cx="960" cy="480" r="0" /><circle cx="1020" cy="480" r="0" /><circle cx="1080" cy="480" r="0" /><circle cx="1140" cy="480" r="0" /><circle cx="1200" cy="480" r="0" /><circle cx="1260" cy="480" r="0" /><circle cx="1320" cy="480" r="0" /><circle cx="1380" cy="480" r="0" /><circle cx="1440" cy="480" r="0" /><circle cx="1500" cy="480" r="0" /><circle cx="1560" cy="480" r="0" /><circle cx="1620" cy="480" r="0" /><circle cx="1680" cy="480" r="0" /><circle cx="1740" cy="480" r="0" /><circle cx="1800" cy="480" r="0" /><circle cx="1860" cy="480" r="0" /><circle cx="1920" cy="480" r="0" /><circle cx="0" cy="540" r="0" /><circle cx="60" cy="540" r="0" /><circle cx="120" cy="540" r="0" /><circle cx="180" cy="540" r="0" /><circle cx="240" cy="540" r="0" /><circle cx="300" cy="540" r="0" /><circle cx="360" cy="540" r="0" /><circle cx="420" cy="540" r="0" /><circle cx="480" cy="540" r="0" /><circle cx="540" cy="540" r="0" /><circle cx="600" cy="540" r="0" /><circle cx="660" cy="540" r="0" /><circle cx="720" cy="540" r="0" /><circle cx="780" cy="540" r="0" /><circle cx="840" cy="540" r="0" /><circle cx="900" cy="540" r="0" /><circle cx="960" cy="540" r="0" /><circle cx="1020" cy="540" r="0" /><circle cx="1080" cy="540" r="0" /><circle cx="1140" cy="540" r="0" /><circle cx="1200" cy="540" r="0" /><circle cx="1260" cy="540" r="0" /><circle cx="1320" cy="540" r="0" /><circle cx="1380" cy="540" r="0" /><circle cx="1440" cy="540" r="0" /><circle cx="1500" cy="540" r="0" /><circle cx="1560" cy="540" r="0" /><circle cx="1620" cy="540" r="0" /><circle cx="1680" cy="540" r="0" /><circle cx="1740" cy="540" r="0" /><circle cx="1800" cy="540" r="0" /><circle cx="1860" cy="540" r="0" /><circle cx="1920" cy="540" r="0" /><circle cx="0" cy="600" r="0" /><circle cx="60" cy="600" r="0" /><circle cx="120" cy="600" r="0" /><circle cx="180" cy="600" r="0" /><circle cx="240" cy="600" r="0" /><circle cx="300" cy="600" r="0" /><circle cx="360" cy="600" r="0" /><circle cx="420" cy="600" r="0" /><circle cx="480" cy="600" r="0" /><circle cx="540" cy="600" r="0" /><circle cx="600" cy="600" r="0" /><circle cx="660" cy="600" r="0" /><circle cx="720" cy="600" r="0" /><circle cx="780" cy="600" r="0" /><circle cx="840" cy="600" r="0" /><circle cx="900" cy="600" r="0" /><circle cx="960" cy="600" r="0" /><circle cx="1020" cy="600" r="0" /><circle cx="1080" cy="600" r="0" /><circle cx="1140" cy="600" r="0" /><circle cx="1200" cy="600" r="0" /><circle cx="1260" cy="600" r="0" /><circle cx="1320" cy="600" r="0" /><circle cx="1380" cy="600" r="0" /><circle cx="1440" cy="600" r="0" /><circle cx="1500" cy="600" r="0" /><circle cx="1560" cy="600" r="0" /><circle cx="1620" cy="600" r="0" /><circle cx="1680" cy="600" r="0" /><circle cx="1740" cy="600" r="0" /><circle cx="1800" cy="600" r="0" /><circle cx="1860" cy="600" r="0" /><circle cx="1920" cy="600" r="0" /><circle cx="0" cy="660" r="0" /><circle cx="60" cy="660" r="0" /><circle cx="120" cy="660" r="0" /><circle cx="180" cy="660" r="0" /><circle cx="240" cy="660" r="0" /><circle cx="300" cy="660" r="0" /><circle cx="360" cy="660" r="0" /><circle cx="420" cy="660" r="0" /><circle cx="480" cy="660" r="0" /><circle cx="540" cy="660" r="0" /><circle cx="600" cy="660" r="0" /><circle cx="660" cy="660" r="0" /><circle cx="720" cy="660" r="0" /><circle cx="780" cy="660" r="0" /><circle cx="840" cy="660" r="0" /><circle cx="900" cy="660" r="0" /><circle cx="960" cy="660" r="0" /><circle cx="1020" cy="660" r="0" /><circle cx="1080" cy="660" r="0" /><circle cx="1140" cy="660" r="0" /><circle cx="1200" cy="660" r="0" /><circle cx="1260" cy="660" r="0" /><circle cx="1320" cy="660" r="0" /><circle cx="1380" cy="660" r="0" /><circle cx="1440" cy="660" r="0" /><circle cx="1500" cy="660" r="0" /><circle cx="1560" cy="660" r="0" /><circle cx="1620" cy="660" r="0" /><circle cx="1680" cy="660" r="0" /><circle cx="1740" cy="660" r="0" /><circle cx="1800" cy="660" r="0" /><circle cx="1860" cy="660" r="0" /><circle cx="1920" cy="660" r="0" /><circle cx="0" cy="720" r="0" /><circle cx="60" cy="720" r="0" /><circle cx="120" cy="720" r="0" /><circle cx="180" cy="720" r="0" /><circle cx="240" cy="720" r="0" /><circle cx="300" cy="720" r="0" /><circle cx="360" cy="720" r="0" /><circle cx="420" cy="720" r="0" /><circle cx="480" cy="720" r="0" /><circle cx="540" cy="720" r="0" /><circle cx="600" cy="720" r="0" /><circle cx="660" cy="720" r="0" /><circle cx="720" cy="720" r="0" /><circle cx="780" cy="720" r="0" /><circle cx="840" cy="720" r="0" /><circle cx="900" cy="720" r="0" /><circle cx="960" cy="720" r="0" /><circle cx="1020" cy="720" r="0" /><circle cx="1080" cy="720" r="0" /><circle cx="1140" cy="720" r="0" /><circle cx="1200" cy="720" r="0" /><circle cx="1260" cy="720" r="0" /><circle cx="1320" cy="720" r="0" /><circle cx="1380" cy="720" r="0" /><circle cx="1440" cy="720" r="0" /><circle cx="1500" cy="720" r="0" /><circle cx="1560" cy="720" r="0" /><circle cx="1620" cy="720" r="0" /><circle cx="1680" cy="720" r="0" /><circle cx="1740" cy="720" r="0" /><circle cx="1800" cy="720" r="0" /><circle cx="1860" cy="720" r="0" /><circle cx="1920" cy="720" r="0" /><circle cx="0" cy="780" r="0" /><circle cx="60" cy="780" r="0" /><circle cx="120" cy="780" r="0" /><circle cx="180" cy="780" r="0" /><circle cx="240" cy="780" r="0" /><circle cx="300" cy="780" r="0" /><circle cx="360" cy="780" r="0" /><circle cx="420" cy="780" r="0" /><circle cx="480" cy="780" r="0" /><circle cx="540" cy="780" r="0" /><circle cx="600" cy="780" r="0" /><circle cx="660" cy="780" r="0" /><circle cx="720" cy="780" r="0" /><circle cx="780" cy="780" r="0" /><circle cx="840" cy="780" r="0" /><circle cx="900" cy="780" r="0" /><circle cx="960" cy="780" r="0" /><circle cx="1020" cy="780" r="0" /><circle cx="1080" cy="780" r="0" /><circle cx="1140" cy="780" r="0" /><circle cx="1200" cy="780" r="0" /><circle cx="1260" cy="780" r="0" /><circle cx="1320" cy="780" r="0" /><circle cx="1380" cy="780" r="0" /><circle cx="1440" cy="780" r="0" /><circle cx="1500" cy="780" r="0" /><circle cx="1560" cy="780" r="0" /><circle cx="1620" cy="780" r="0" /><circle cx="1680" cy="780" r="0" /><circle cx="1740" cy="780" r="0" /><circle cx="1800" cy="780" r="0" /><circle cx="1860" cy="780" r="0" /><circle cx="1920" cy="780" r="0" /><circle cx="0" cy="840" r="0" /><circle cx="60" cy="840" r="0" /><circle cx="120" cy="840" r="0" /><circle cx="180" cy="840" r="0" /><circle cx="240" cy="840" r="0" /><circle cx="300" cy="840" r="0" /><circle cx="360" cy="840" r="0" /><circle cx="420" cy="840" r="0" /><circle cx="480" cy="840" r="0" /><circle cx="540" cy="840" r="0" /><circle cx="600" cy="840" r="0" /><circle cx="660" cy="840" r="0" /><circle cx="720" cy="840" r="0" /><circle cx="780" cy="840" r="0" /><circle cx="840" cy="840" r="0" /><circle cx="900" cy="840" r="0" /><circle cx="960" cy="840" r="0" /><circle cx="1020" cy="840" r="0" /><circle cx="1080" cy="840" r="0" /><circle cx="1140" cy="840" r="0" /><circle cx="1200" cy="840" r="0" /><circle cx="1260" cy="840" r="0" /><circle cx="1320" cy="840" r="0" /><circle cx="1380" cy="840" r="0" /><circle cx="1440" cy="840" r="0" /><circle cx="1500" cy="840" r="0" /><circle cx="1560" cy="840" r="0" /><circle cx="1620" cy="840" r="0" /><circle cx="1680" cy="840" r="0" /><circle cx="1740" cy="840" r="0" /><circle cx="1800" cy="840" r="0" /><circle cx="1860" cy="840" r="0" /><circle cx="1920" cy="840" r="0" /><circle cx="0" cy="900" r="0" /><circle cx="60" cy="900" r="0" /><circle cx="120" cy="900" r="0" /><circle cx="180" cy="900" r="0" /><circle cx="240" cy="900" r="0" /><circle cx="300" cy="900" r="0" /><circle cx="360" cy="900" r="0" /><circle cx="420" cy="900" r="0" /><circle cx="480" cy="900" r="0" /><circle cx="540" cy="900" r="0" /><circle cx="600" cy="900" r="0" /><circle cx="660" cy="900" r="0" /><circle cx="720" cy="900" r="0" /><circle cx="780" cy="900" r="0" /><circle cx="840" cy="900" r="0" /><circle cx="900" cy="900" r="0" /><circle cx="960" cy="900" r="0" /><circle cx="1020" cy="900" r="0" /><circle cx="1080" cy="900" r="0" /><circle cx="1140" cy="900" r="0" /><circle cx="1200" cy="900" r="0" /><circle cx="1260" cy="900" r="0" /><circle cx="1320" cy="900" r="0" /><circle cx="1380" cy="900" r="0" /><circle cx="1440" cy="900" r="0" /><circle cx="1500" cy="900" r="0" /><circle cx="1560" cy="900" r="0" /><circle cx="1620" cy="900" r="0" /><circle cx="1680" cy="900" r="0" /><circle cx="1740" cy="900" r="0" /><circle cx="1800" cy="900" r="0" /><circle cx="1860" cy="900" r="0" /><circle cx="1920" cy="900" r="0" /><circle cx="0" cy="960" r="0" /><circle cx="60" cy="960" r="0" /><circle cx="120" cy="960" r="0" /><circle cx="180" cy="960" r="0" /><circle cx="240" cy="960" r="0" /><circle cx="300" cy="960" r="0" /><circle cx="360" cy="960" r="0" /><circle cx="420" cy="960" r="0" /><circle cx="480" cy="960" r="0" /><circle cx="540" cy="960" r="0" /><circle cx="600" cy="960" r="0" /><circle cx="660" cy="960" r="0" /><circle cx="720" cy="960" r="0" /><circle cx="780" cy="960" r="0" /><circle cx="840" cy="960" r="0" /><circle cx="900" cy="960" r="0" /><circle cx="960" cy="960" r="0" /><circle cx="1020" cy="960" r="0" /><circle cx="1080" cy="960" r="0" /><circle cx="1140" cy="960" r="0" /><circle cx="1200" cy="960" r="0" /><circle cx="1260" cy="960" r="0" /><circle cx="1320" cy="960" r="0" /><circle cx="1380" cy="960" r="0" /><circle cx="1440" cy="960" r="0" /><circle cx="1500" cy="960" r="0" /><circle cx="1560" cy="960" r="0" /><circle cx="1620" cy="960" r="0" /><circle cx="1680" cy="960" r="0" /><circle cx="1740" cy="960" r="0" /><circle cx="1800" cy="960" r="0" /><circle cx="1860" cy="960" r="0" /><circle cx="1920" cy="960" r="0" /></g></mask></defs>
+          <image href="assets/img/p06-a.jpg" x="0.0" y="-140.0" width="1920.0" height="1080.0" preserveAspectRatio="none" mask="url(#perf-mask)" />
+        </svg>
+      </div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">06</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Zadig</span></h2>
         <p class="cap-meta"><span class="w">Banc</span> <span class="w">en</span> <span class="w">acier</span> <span class="w">perforé,</span> <span class="w">à</span> <span class="w">facettes</span></p>
@@ -596,10 +455,13 @@ html, body {
 
     <div id="sc-zadig-lieux" class="scene-frame clip" data-composition-id="zadig-lieux" data-start="60" data-duration="11" data-track-index="1" data-label="Zadig, Bergen et Milan" data-theme="light" style="z-index:7">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1194" data-h="1080" style="left:0px;top:0px;width:1194px;height:1080px"><img src="assets/img/p07-b.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="down" data-o="1" data-w="726" data-h="545" style="left:1194px;top:0px;width:726px;height:545px"><img src="assets/img/p07-c.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="iris" data-o="2" data-w="726" data-h="540" style="left:1194px;top:540px;width:726px;height:540px"><img src="assets/img/p07-a.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage">
+        <figure class="ph museum" style="left:0px;top:0px;width:1100px;height:940px"><img class="" src="assets/img/p07-b.jpg" alt="" style="position:absolute;left:0.0px;top:-27.5px;width:1100.0px;height:995.0px" /></figure>
+        <figure class="ph milan" style="left:1110px;top:0px;width:810px;height:465px"><img class="" src="assets/img/p07-c.jpg" alt="" style="position:absolute;left:0.0px;top:-71.7px;width:810.0px;height:608.4px" /></figure>
+        <figure class="ph detail" style="left:1110px;top:475px;width:810px;height:465px"><img class="" src="assets/img/p07-a.jpg" alt="" style="position:absolute;left:0.0px;top:-98.9px;width:810.0px;height:602.5px" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">07</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Zadig</span></h2>
         <p class="cap-meta"><span class="w">Musée</span> <span class="w">de</span> <span class="w">Bergen,</span> <span class="w">Norvège</span> <span class="w">·</span> <span class="w">Milan</span></p>
@@ -609,10 +471,13 @@ html, body {
 
     <div id="sc-croquis" class="scene-frame clip" data-composition-id="croquis" data-start="70" data-duration="11" data-track-index="1" data-label="Du croquis au banc" data-theme="light" style="z-index:8">
       <div class="inner">
-      <figure class="ph" data-rv="left" data-o="0" data-w="660" data-h="540" style="left:40px;top:280px;width:660px;height:540px"><img src="assets/img/p08-render.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="draw" data-o="1" data-w="600" data-h="420" style="left:700px;top:430px;width:600px;height:420px"><img src="assets/img/p08-sketch1.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="draw" data-o="2" data-w="610" data-h="610" style="left:1300px;top:210px;width:610px;height:610px"><img src="assets/img/p08-sketch2.jpg" alt="" /></figure>
-      <div class="cap cap--free cap--row" style="left:80px;top:904px">
+      <div class="stage">
+        <figure class="ph sk2" style="left:1280px;top:120px;width:610px;height:610px"><img class="" src="assets/img/p08-sketch2.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:610.0px;height:610.0px" /></figure>
+        <figure class="ph sk1" style="left:680px;top:330px;width:600px;height:420px"><img class="" src="assets/img/p08-sketch1.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:600.0px;height:420.0px" /></figure>
+        <div class="slats" style="left:30px;top:170px;width:660px;height:540px"><i class="slat" data-k="0" style="left:0px;top:0px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px 0.0px"></i><i class="slat" data-k="1" style="left:0px;top:39px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -39.0px"></i><i class="slat" data-k="2" style="left:0px;top:77px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -77.0px"></i><i class="slat" data-k="3" style="left:0px;top:116px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -116.0px"></i><i class="slat" data-k="4" style="left:0px;top:154px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -154.0px"></i><i class="slat" data-k="5" style="left:0px;top:193px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -193.0px"></i><i class="slat" data-k="6" style="left:0px;top:231px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -231.0px"></i><i class="slat" data-k="7" style="left:0px;top:270px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -270.0px"></i><i class="slat" data-k="8" style="left:0px;top:309px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -309.0px"></i><i class="slat" data-k="9" style="left:0px;top:347px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -347.0px"></i><i class="slat" data-k="10" style="left:0px;top:386px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -386.0px"></i><i class="slat" data-k="11" style="left:0px;top:424px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -424.0px"></i><i class="slat" data-k="12" style="left:0px;top:463px;width:660px;height:38px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -463.0px"></i><i class="slat" data-k="13" style="left:0px;top:501px;width:660px;height:39px;background-image:url('assets/img/p08-render.jpg');background-size:660.0px 540.0px;background-position:0.0px -501.0px"></i></div>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">08</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Du</span> <span class="w">croquis</span> <span class="w">au</span> <span class="w">banc</span></h2>
         <p class="cap-meta"><span class="w">Lattes</span> <span class="w">en</span> <span class="w">plat</span> <span class="w">cintré</span> <span class="w">puis</span> <span class="w">soudé</span></p>
@@ -622,9 +487,12 @@ html, body {
 
     <div id="sc-alassio" class="scene-frame clip" data-composition-id="alassio" data-start="80" data-duration="11" data-track-index="1" data-label="Alassio" data-theme="light" style="z-index:9">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1257" data-h="1080" style="left:0px;top:0px;width:1257px;height:1080px"><img src="assets/img/p09-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="up" data-o="1" data-w="663" data-h="1080" style="left:1257px;top:0px;width:663px;height:1080px"><img src="assets/img/p09-b.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--tl">
+      <div class="stage">
+        <figure class="ph sea" style="left:0px;top:0px;width:1290px;height:940px"><img class="" src="assets/img/p09-a.jpg" alt="" style="position:absolute;left:-51.6px;top:-188.2px;width:1393.2px;height:1196.7px" /></figure>
+        <figure class="ph park" style="left:1300px;top:0px;width:620px;height:940px"><img class="" src="assets/img/p09-b.jpg" alt="" style="position:absolute;left:0.0px;top:-69.4px;width:620.0px;height:1009.4px" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">09</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Alassio,</span> <span class="w">Italie</span></h2>
         <p class="cap-meta"><span class="w">Mobilier</span> <span class="w">urbain</span> <span class="w">du</span> <span class="w">front</span> <span class="w">de</span> <span class="w">mer</span></p>
@@ -634,9 +502,13 @@ html, body {
 
     <div id="sc-emme-monaco" class="scene-frame clip" data-composition-id="emme-monaco" data-start="90" data-duration="11" data-track-index="1" data-label="Emme, Monte-Carlo" data-theme="light" style="z-index:10">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1384" data-h="993" style="left:36px;top:51px;width:1384px;height:993px"><img src="assets/img/p10-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="left" data-o="1" data-w="669" data-h="501" style="left:1215px;top:78px;width:669px;height:501px"><img src="assets/img/p10-b.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:1460px;top:640px">
+      <div class="stage">
+        <figure class="ph walk" style="left:0px;top:0px;width:1300px;height:940px"><div class="cam"><img class="" src="assets/img/p10-a.jpg" alt="" style="position:absolute;left:0.0px;top:-124.3px;width:1564.5px;height:1122.9px" />
+          <svg class="ov bk" viewBox="0 0 1920 940" aria-hidden="true"><path class="brk" d="M615 556V520H651" /><path class="brk" d="M889 520H925V556" /><path class="brk" d="M925 859V895H889" /><path class="brk" d="M651 895H615V859" /></svg></div></figure>
+        <figure class="ph view" style="left:1310px;top:0px;width:610px;height:940px"><img class="" src="assets/img/p10-b.jpg" alt="" style="position:absolute;left:-222.1px;top:0.0px;width:1255.0px;height:940.0px" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">10</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Promenade</span> <span class="w">de</span> <span class="w">Monte-Carlo,</span> <span class="w">Monaco</span></p>
@@ -646,9 +518,12 @@ html, body {
 
     <div id="sc-variations" class="scene-frame clip" data-composition-id="variations" data-start="100" data-duration="11" data-track-index="1" data-label="Variations" data-theme="light" style="z-index:11">
       <div class="inner">
-      <figure class="ph" data-rv="iris" data-o="0" data-w="1150" data-h="1080" style="left:0px;top:0px;width:1150px;height:1080px"><img src="assets/img/p11-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="left" data-o="1" data-w="810" data-h="703" style="left:1110px;top:189px;width:810px;height:703px"><img src="assets/img/p11-b.jpg" alt="" /></figure>
-      <div class="cap cap--free cap--row" style="left:80px;top:56px">
+      <div class="stage">
+        <figure class="ph ring" style="left:40px;top:0px;width:1002px;height:940px"><img class="" src="assets/img/p11-a.jpg" alt="" style="position:absolute;left:-0.0px;top:-0.5px;width:1002.0px;height:941.0px" /></figure>
+        <figure class="ph snake" style="left:1120px;top:150px;width:760px;height:660px"><img class="" src="assets/img/p11-b.jpg" alt="" style="position:absolute;left:-0.0px;top:0.0px;width:760.1px;height:660.0px" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">11</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Bancs</span> <span class="w">courbes</span> <span class="w">en</span> <span class="w">bois,</span> <span class="w">modulables</span></p>
@@ -658,9 +533,12 @@ html, body {
 
     <div id="sc-variations-detail" class="scene-frame clip" data-composition-id="variations-detail" data-start="110" data-duration="11" data-track-index="1" data-label="Variations, détail" data-theme="light" style="z-index:12">
       <div class="inner">
-      <figure class="ph" data-rv="draw" data-o="0" data-w="1112" data-h="857" style="left:0px;top:140px;width:1112px;height:857px"><img src="assets/img/p12-b.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="up" data-o="1" data-w="770" data-h="1080" style="left:1150px;top:0px;width:770px;height:1080px"><img src="assets/img/p12-a.jpg" alt="" /></figure>
-      <div class="cap cap--free cap--row" style="left:80px;top:56px">
+      <div class="stage">
+        <figure class="ph sketch" style="left:30px;top:40px;width:1092px;height:842px"><img class="" src="assets/img/p12-b.jpg" alt="" style="position:absolute;left:-0.1px;top:0.0px;width:1092.1px;height:842.0px" /></figure>
+        <figure class="ph back" style="left:1170px;top:0px;width:750px;height:940px"><div class="cam"><img class="" src="assets/img/p12-a.jpg" alt="" style="position:absolute;left:0.0px;top:0.0px;width:750.0px;height:1051.9px" /></div></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">12</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Esquisse</span> <span class="w">de</span> <span class="w">la</span> <span class="w">structure</span> <span class="w">et</span> <span class="w">du</span> <span class="w">dossier</span></p>
@@ -670,9 +548,12 @@ html, body {
 
     <div id="sc-variations-paris" class="scene-frame clip" data-composition-id="variations-paris" data-start="120" data-duration="11" data-track-index="1" data-label="Variations, Paris" data-theme="light" style="z-index:13">
       <div class="inner">
-      <figure class="ph" data-rv="iris" data-o="0" data-w="1324" data-h="993" style="left:36px;top:51px;width:1324px;height:993px"><img src="assets/img/p13-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="down" data-o="1" data-w="731" data-h="502" style="left:1153px;top:51px;width:731px;height:502px"><img src="assets/img/p13-b.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:1420px;top:640px">
+      <div class="stage">
+        <figure class="ph ground" style="left:0px;top:0px;width:1300px;height:940px"><img class="" src="assets/img/p13-a.jpg" alt="" style="position:absolute;left:0.0px;top:-175.7px;width:1550.6px;height:1163.4px" /></figure>
+        <figure class="ph aerial" style="left:1310px;top:0px;width:610px;height:940px"><div class="cam"><img class="" src="assets/img/p13-b.jpg" alt="" style="position:absolute;left:-379.7px;top:0.0px;width:1369.4px;height:940.0px" /></div></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">13</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Bancs</span> <span class="w">installés</span> <span class="w">à</span> <span class="w">Paris</span></p>
@@ -682,12 +563,13 @@ html, body {
 
     <div id="sc-emme-moule" class="scene-frame clip" data-composition-id="emme-moule" data-start="130" data-duration="11" data-track-index="1" data-label="Emme, moulage" data-theme="light" style="z-index:14">
       <div class="inner">
-      <figure class="ph" data-rv="up" data-o="0" data-w="560" data-h="590" style="left:740px;top:100px;width:560px;height:590px"><img src="assets/img/p14-render.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="1" data-w="340" data-h="240" style="left:100px;top:690px;width:340px;height:240px"><img src="assets/img/p14-s1.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="2" data-w="340" data-h="240" style="left:560px;top:690px;width:340px;height:240px"><img src="assets/img/p14-s2.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="3" data-w="340" data-h="240" style="left:1030px;top:690px;width:340px;height:240px"><img src="assets/img/p14-s3.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="4" data-w="350" data-h="440" style="left:1480px;top:490px;width:350px;height:440px"><img src="assets/img/p14-s4.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:80px;top:80px;max-width:600px">
+      <div class="stage">
+        <figure class="ph render" style="left:700px;top:10px;width:532px;height:560px"><img src="assets/img/p14-render.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <figure class="ph step step1" style="left:80px;top:640px;width:340px;height:240px"><img src="assets/img/p14-s1.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step step2" style="left:540px;top:640px;width:340px;height:240px"><img src="assets/img/p14-s2.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step step3" style="left:1000px;top:640px;width:340px;height:240px"><img src="assets/img/p14-s3.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step step4" style="left:1470px;top:450px;width:350px;height:440px"><img src="assets/img/p14-s4.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <svg class="ov arrows" viewBox="0 0 1920 940" aria-hidden="true"><path class="arw" d="M440 760H520M506 750L520 760L506 770" /><path class="arw" d="M900 760H980M966 750L980 760L966 770" /><path class="arw" d="M1360 760H1450M1436 750L1450 760L1436 770" /></svg>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">14</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Béton</span> <span class="w">moulé</span> <span class="w">:</span> <span class="w">remplir,</span> <span class="w">retourner,</span> <span class="w">démouler</span></p>
@@ -697,8 +579,9 @@ html, body {
 
     <div id="sc-moules" class="scene-frame clip" data-composition-id="moules" data-start="140" data-duration="11" data-track-index="1" data-label="Moules" data-theme="light" style="z-index:15">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1920" data-h="1080" style="left:0px;top:0px;width:1920px;height:1080px"><img src="assets/img/p15-a.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage"><div class="cam"><i class="plank" data-k="0" style="left:0px;top:0px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -91.6px"></i><i class="plank" data-k="1" style="left:0px;top:104px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -195.6px"></i><i class="plank" data-k="2" style="left:0px;top:209px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -300.6px"></i><i class="plank" data-k="3" style="left:0px;top:313px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -404.6px"></i><i class="plank" data-k="4" style="left:0px;top:418px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -509.6px"></i><i class="plank" data-k="5" style="left:0px;top:522px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -613.6px"></i><i class="plank" data-k="6" style="left:0px;top:627px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -718.6px"></i><i class="plank" data-k="7" style="left:0px;top:731px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -822.6px"></i><i class="plank" data-k="8" style="left:0px;top:836px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -927.6px"></i></div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">15</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Les</span> <span class="w">moules</span></h2>
         <p class="cap-meta"><span class="w">Coffrages</span> <span class="w">de</span> <span class="w">fabrication</span> <span class="w">à</span> <span class="w">l'atelier</span></p>
@@ -708,9 +591,12 @@ html, body {
 
     <div id="sc-emme-djeddah" class="scene-frame clip" data-composition-id="emme-djeddah" data-start="150" data-duration="11" data-track-index="1" data-label="Emme, Djeddah" data-theme="light" style="z-index:16">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1293" data-h="1080" style="left:0px;top:0px;width:1293px;height:1080px"><img src="assets/img/p16-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="up" data-o="1" data-w="624" data-h="1080" style="left:1295px;top:0px;width:624px;height:1080px"><img src="assets/img/p16-b.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage">
+        <figure class="ph ground" style="left:0px;top:0px;width:1290px;height:940px"><img class="" src="assets/img/p16-a.jpg" alt="" style="position:absolute;left:0.0px;top:-122.5px;width:1290.0px;height:1077.2px" /></figure>
+        <div class="aer"><img src="assets/img/p16-b.jpg" alt="" /></div>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">16</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Corniche</span> <span class="w">de</span> <span class="w">Djeddah</span></p>
@@ -720,8 +606,10 @@ html, body {
 
     <div id="sc-beton-bois" class="scene-frame clip" data-composition-id="beton-bois" data-start="160" data-duration="11" data-track-index="1" data-label="Banc béton et bois" data-theme="light" style="z-index:17">
       <div class="inner">
-      <figure class="ph" data-rv="left" data-o="0" data-w="1920" data-h="1080" style="left:0px;top:0px;width:1920px;height:1080px"><img src="assets/img/p17-a.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage"><div class="cam"><img class="focus" src="assets/img/p17-a.jpg" alt="" style="position:absolute;left:0.0px;top:-70.0px;width:1920.0px;height:1080.0px" />
+        <svg class="ov tech tech--ink" viewBox="0 0 1920 940" aria-hidden="true"><g class="bk"><path class="brk" d="M345 468V432H381" /><path class="brk" d="M1664 432H1700V468" /><path class="brk" d="M1700 828V864H1664" /><path class="brk" d="M381 864H345V828" /></g><path class="dim-tick" d="M361 886V922M1682 886V922" /><path class="dim-line" d="M361 904L1682 904" /><path class="dim-tick" d="M1734 448H1770M1734 848H1770" /><path class="dim-line" d="M1752 448L1752 848" /></svg></div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">17</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">béton</span> <span class="w">et</span> <span class="w">bois</span></h2>
         <p class="cap-meta"><span class="w">Piètements</span> <span class="w">en</span> <span class="w">béton,</span> <span class="w">assise</span> <span class="w">en</span> <span class="w">bois</span></p>
@@ -731,8 +619,10 @@ html, body {
 
     <div id="sc-acier-beton" class="scene-frame clip" data-composition-id="acier-beton" data-start="170" data-duration="11" data-track-index="1" data-label="Banc acier et béton" data-theme="light" style="z-index:18">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1920" data-h="1080" style="left:0px;top:0px;width:1920px;height:1080px"><img src="assets/img/p18-a.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--tl">
+      <div class="stage"><div class="cam"><img class="" src="assets/img/p18-a.jpg" alt="" style="position:absolute;left:0.0px;top:-70.0px;width:1920.0px;height:1080.0px" />
+        <svg class="ov tech" viewBox="0 0 1920 940" aria-hidden="true"><g class="bk"><path class="brk" d="M600 420V384H636" /><path class="brk" d="M1618 384H1654V420" /><path class="brk" d="M1654 842V878H1618" /><path class="brk" d="M636 878H600V842" /></g><path class="dim-tick" d="M618 326V362M1636 326V362" /><path class="dim-line" d="M618 344L1636 344" /></svg></div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">18</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">acier</span> <span class="w">et</span> <span class="w">béton</span></h2>
         <p class="cap-meta"><span class="w">Une</span> <span class="w">coque</span> <span class="w">en</span> <span class="w">acier</span> <span class="w">sur</span> <span class="w">un</span> <span class="w">socle</span> <span class="w">en</span> <span class="w">béton</span></p>
@@ -742,9 +632,12 @@ html, body {
 
     <div id="sc-ligne" class="scene-frame clip" data-composition-id="ligne" data-start="180" data-duration="11" data-track-index="1" data-label="Ligne" data-theme="light" style="z-index:19">
       <div class="inner">
-      <figure class="ph" data-rv="up" data-o="0" data-w="960" data-h="1080" style="left:0px;top:0px;width:960px;height:1080px"><img src="assets/img/p19-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="draw" data-o="1" data-w="680" data-h="480" style="left:1170px;top:330px;width:680px;height:480px"><img src="assets/img/p19-diagram.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:1180px;top:64px">
+      <div class="stage">
+        <figure class="ph photo" style="left:0px;top:0px;width:900px;height:940px"><div class="cam"><img class="" src="assets/img/p19-a.jpg" alt="" style="position:absolute;left:0.0px;top:-72.5px;width:900.0px;height:1012.5px" /></div></figure>
+        <figure class="ph diagram" style="left:1060px;top:220px;width:680px;height:480px"><img src="assets/img/p19-diagram.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">19</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Ligne</span></h2>
         <p class="cap-meta"><span class="w">MyWay</span> <span class="w">·</span> <span class="w">une</span> <span class="w">assise</span> <span class="w">sur</span> <span class="w">un</span> <span class="w">profil</span> <span class="w">en</span> <span class="w">I</span></p>
@@ -754,9 +647,12 @@ html, body {
 
     <div id="sc-monolithe" class="scene-frame clip" data-composition-id="monolithe" data-start="190" data-duration="11" data-track-index="1" data-label="Banc monolithe" data-theme="light" style="z-index:20">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1077" data-h="1080" style="left:0px;top:0px;width:1077px;height:1080px"><img src="assets/img/p20-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="draw" data-o="1" data-w="770" data-h="350" style="left:1110px;top:400px;width:770px;height:350px"><img src="assets/img/p20-diagram.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:1160px;top:64px">
+      <div class="stage">
+        <figure class="ph photo" style="left:0px;top:0px;width:1040px;height:940px"><div class="cam"><img class="" src="assets/img/p20-a.jpg" alt="" style="position:absolute;left:0.0px;top:-102.6px;width:1040.0px;height:1042.6px" /></div></figure>
+        <figure class="ph diagram" style="left:1100px;top:300px;width:770px;height:350px"><img src="assets/img/p20-diagram.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">20</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">monolithe</span></h2>
         <p class="cap-meta"><span class="w">Béton,</span> <span class="w">une</span> <span class="w">assise</span> <span class="w">qui</span> <span class="w">se</span> <span class="w">décale</span></p>
@@ -766,9 +662,13 @@ html, body {
 
     <div id="sc-blanc" class="scene-frame clip" data-composition-id="blanc" data-start="200" data-duration="11" data-track-index="1" data-label="Banc et jardinières" data-theme="light" style="z-index:21">
       <div class="inner">
-      <figure class="ph" data-rv="up" data-o="1" data-w="984" data-h="595" style="left:936px;top:243px;width:984px;height:595px"><img src="assets/img/p21-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="left" data-o="0" data-w="1020" data-h="729" style="left:0px;top:175px;width:1020px;height:729px"><img src="assets/img/p21-b.jpg" alt="" /></figure>
-      <div class="cap cap--free cap--row" style="left:80px;top:940px">
+      <div class="stage">
+        <div class="obj" style="left:10px;top:110px;width:1020px;height:729px;background-image:url('assets/img/p21-b.jpg');background-size:1020.0px 729.0px;background-position:0.0px 0.0px"></div>
+        <div class="obj" style="left:960px;top:260px;width:520px;height:571px;background-image:url('assets/img/p21-a.jpg');background-size:945.0px 571.0px;background-position:0.0px 0.0px"></div>
+        <div class="obj" style="left:1480px;top:260px;width:425px;height:571px;background-image:url('assets/img/p21-a.jpg');background-size:945.0px 571.0px;background-position:-520.0px 0.0px"></div>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">21</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">et</span> <span class="w">jardinières</span></h2>
         <p class="cap-meta"><span class="w">Béton</span> <span class="w">blanc,</span> <span class="w">formes</span> <span class="w">galets</span></p>
@@ -778,10 +678,13 @@ html, body {
 
     <div id="sc-fontvieille" class="scene-frame clip" data-composition-id="fontvieille" data-start="210" data-duration="11" data-track-index="1" data-label="Monaco, Fontvieille" data-theme="light" style="z-index:22">
       <div class="inner">
-      <figure class="ph" data-rv="down" data-o="0" data-w="960" data-h="526" style="left:0px;top:0px;width:960px;height:526px"><img src="assets/img/p22-b.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="up" data-o="1" data-w="960" data-h="554" style="left:0px;top:526px;width:960px;height:554px"><img src="assets/img/p22-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="diag" data-o="2" data-w="960" data-h="1080" style="left:960px;top:0px;width:960px;height:1080px"><img src="assets/img/p22-c.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage">
+        <figure class="ph harbour" style="left:0px;top:475px;width:950px;height:465px"><img class="" src="assets/img/p22-a.jpg" alt="" style="position:absolute;left:0.0px;top:-41.6px;width:950.0px;height:548.2px" /></figure>
+        <figure class="ph planter" style="left:960px;top:0px;width:960px;height:940px"><img class="" src="assets/img/p22-c.jpg" alt="" style="position:absolute;left:0.0px;top:-124.0px;width:960.0px;height:1080.0px" /></figure>
+        <figure class="ph dusk" style="left:0px;top:0px;width:950px;height:465px"><img class="" src="assets/img/p22-b.jpg" alt="" style="position:absolute;left:0.0px;top:-27.8px;width:950.0px;height:520.5px" /></figure>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">22</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Monaco</span></h2>
         <p class="cap-meta"><span class="w">Port</span> <span class="w">de</span> <span class="w">Fontvieille</span></p>
@@ -791,9 +694,12 @@ html, body {
 
     <div id="sc-kj" class="scene-frame clip" data-composition-id="kj" data-start="220" data-duration="11" data-track-index="1" data-label="KJ" data-theme="dark" style="z-index:23">
       <div class="inner" style="background:#000">
-      <figure class="ph" data-rv="light" data-o="0" data-w="1732" data-h="1080" style="left:60px;top:0px;width:1732px;height:1080px"><img src="assets/img/p23-a.jpg" alt="" /></figure>
-      <div class="glow"></div>
-      <div class="cap cap--free" style="left:96px;top:80px">
+      <div class="stage"><div class="cam">
+        <figure class="ph lamp" style="left:206px;top:0px;width:1507px;height:940px"><img src="assets/img/p23-a.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <svg class="ov axes" viewBox="0 0 1920 940" aria-hidden="true"><path class="axis" d="M120 409H1800" /><path class="axis" d="M689 60V940" /><circle class="axis" cx="689" cy="409" r="34" /></svg>
+      </div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">23</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Éclairage</span> <span class="w">urbain</span> <span class="w">pour</span> <span class="w">Fontes</span> <span class="w">de</span> <span class="w">Paris</span></p>
@@ -803,9 +709,11 @@ html, body {
 
     <div id="sc-kj-prix" class="scene-frame clip" data-composition-id="kj-prix" data-start="230" data-duration="11" data-track-index="1" data-label="KJ, Design Plus" data-theme="light" style="z-index:24">
       <div class="inner">
-      <figure class="ph" data-rv="diag" data-o="0" data-w="1920" data-h="1080" style="left:0px;top:0px;width:1920px;height:1080px"><img src="assets/img/p24-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="3" data-w="267" data-h="40" style="left:1378px;top:934px;width:267px;height:40px"><img src="assets/img/p24-b.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--tl">
+      <div class="stage"><div class="cam"><img class="" src="assets/img/p24-a.jpg" alt="" style="position:absolute;left:0.0px;top:-140.0px;width:1920.0px;height:1080.0px" />
+        <img class="badge" src="assets/img/p24-b.jpg" alt="" style="position:absolute;left:1378px;top:794px;width:267px;height:40px" />
+        <svg class="ov tech tech--ink" viewBox="0 0 1920 940" aria-hidden="true"><ellipse class="ring" cx="1511" cy="814" rx="200" ry="74" /></svg></div></div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">24</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Lauréat</span> <span class="w">du</span> <span class="w">prix</span> <span class="w">Design</span> <span class="w">Plus</span></p>
@@ -815,9 +723,15 @@ html, body {
 
     <div id="sc-kj-technique" class="scene-frame clip" data-composition-id="kj-technique" data-start="240" data-duration="11" data-track-index="1" data-label="KJ, technique" data-theme="light" style="z-index:25">
       <div class="inner">
-      <figure class="ph" data-rv="up" data-o="0" data-w="1421" data-h="1080" style="left:110px;top:0px;width:1421px;height:1080px"><img src="assets/img/p25-b.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="left" data-o="1" data-w="389" data-h="1044" style="left:1531px;top:36px;width:389px;height:1044px"><img src="assets/img/p25-a.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:720px;top:700px">
+      <div class="stage">
+        <figure class="ph side" style="left:0px;top:0px;width:1237px;height:940px"><img src="assets/img/p25-b.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <figure class="ph front" style="left:1520px;top:16px;width:339px;height:909px"><img src="assets/img/p25-a.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <svg class="ov tech tech--ink leads" viewBox="0 0 1920 940" aria-hidden="true"><path class="lead" d="M560 210L760 120H860" /><circle class="lead-dot" cx="560" cy="210" r="6" /><path class="lead" d="M880 470L880 600H960" /><circle class="lead-dot" cx="880" cy="470" r="6" /></svg>
+        <p class="note n1">Capot ouvrant</p>
+        <p class="note n2">Module LED</p>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">25</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Capot</span> <span class="w">ouvrant,</span> <span class="w">module</span> <span class="w">LED</span></p>
@@ -827,10 +741,13 @@ html, body {
 
     <div id="sc-usinage" class="scene-frame clip" data-composition-id="usinage" data-start="250" data-duration="11" data-track-index="1" data-label="Usinage du moule" data-theme="light" style="z-index:26">
       <div class="inner">
-      <figure class="ph" data-rv="down" data-o="0" data-w="642" data-h="1080" style="left:0px;top:0px;width:642px;height:1080px"><img src="assets/img/p26-a.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="down" data-o="1" data-w="640" data-h="1080" style="left:642px;top:0px;width:640px;height:1080px"><img src="assets/img/p26-b.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="down" data-o="2" data-w="638" data-h="1080" style="left:1282px;top:0px;width:638px;height:1080px"><img src="assets/img/p26-c.jpg" alt="" /></figure>
-      <div class="cap cap--plate cap--bl">
+      <div class="stage">
+        <div class="pn" data-k="0" style="left:0px;top:0px;width:633px;height:940px"><div class="pn-in"><img class="" src="assets/img/p26-a.jpg" alt="" style="position:absolute;left:0.0px;top:-62.4px;width:633.0px;height:1064.9px" /></div></div>
+        <div class="pn" data-k="1" style="left:643px;top:0px;width:633px;height:940px"><div class="pn-in"><img class="" src="assets/img/p26-b.jpg" alt="" style="position:absolute;left:0.0px;top:-64.1px;width:633.0px;height:1068.2px" /></div></div>
+        <div class="pn" data-k="2" style="left:1287px;top:0px;width:634px;height:940px"><div class="pn-in"><img class="" src="assets/img/p26-c.jpg" alt="" style="position:absolute;left:0.0px;top:-65.8px;width:633.0px;height:1071.5px" /></div></div>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">26</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Le</span> <span class="w">moule</span></h2>
         <p class="cap-meta"><span class="w">Usinage,</span> <span class="w">puis</span> <span class="w">levage</span> <span class="w">du</span> <span class="w">moule</span> <span class="w">en</span> <span class="w">acier</span></p>
@@ -840,12 +757,12 @@ html, body {
 
     <div id="sc-fonderie" class="scene-frame clip" data-composition-id="fonderie" data-start="260" data-duration="11" data-track-index="1" data-label="Fonderie" data-theme="light" style="z-index:27">
       <div class="inner">
-      <figure class="ph" data-rv="pop" data-o="0" data-w="330" data-h="290" style="left:50px;top:520px;width:330px;height:290px"><img src="assets/img/p27-s1.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="1" data-w="330" data-h="290" style="left:415px;top:520px;width:330px;height:290px"><img src="assets/img/p27-s2.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="2" data-w="330" data-h="290" style="left:780px;top:520px;width:330px;height:290px"><img src="assets/img/p27-s3.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="3" data-w="340" data-h="290" style="left:1140px;top:520px;width:340px;height:290px"><img src="assets/img/p27-s4.jpg" alt="" /></figure>
-      <figure class="ph" data-rv="pop" data-o="4" data-w="365" data-h="290" style="left:1505px;top:520px;width:365px;height:290px"><img src="assets/img/p27-s5.jpg" alt="" /></figure>
-      <div class="cap cap--free" style="left:80px;top:80px">
+      <div class="stage">
+        <figure class="ph step" data-k="0" style="left:50px;top:300px;width:330px;height:290px"><img src="assets/img/p27-s1.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step" data-k="1" style="left:415px;top:300px;width:330px;height:290px"><img src="assets/img/p27-s2.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step" data-k="2" style="left:780px;top:300px;width:330px;height:290px"><img src="assets/img/p27-s3.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step" data-k="3" style="left:1140px;top:300px;width:340px;height:290px"><img src="assets/img/p27-s4.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure><figure class="ph step" data-k="4" style="left:1505px;top:300px;width:365px;height:290px"><img src="assets/img/p27-s5.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%" /></figure>
+        <svg class="ov tech tech--ink" viewBox="0 0 1920 940" aria-hidden="true"><path class="track" d="M70 660H1850" /></svg>
+      </div>
+      
+      <div class="cap bcap">
         <div class="cap-num"><span class="mask"><span class="num">27</span></span><span class="tot">/28</span></div>
         <h2 class="cap-name"><span class="w">Fonderie</span></h2>
         <p class="cap-meta"><span class="w">Moulage</span> <span class="w">sous</span> <span class="w">pression</span> <span class="w">de</span> <span class="w">l'aluminium,</span> <span class="w">en</span> <span class="w">cinq</span> <span class="w">temps</span></p>
@@ -867,23 +784,26 @@ html, body {
       <div id="progress" aria-hidden="true"><i></i></div>
     </div>
     <script>
-      window.DECK = {"total":281,"step":10,"len":11,"scenes":[{"id":"cover","start":0,"len":11,"fx":"cover","custom":true,"stepGap":0},{"id":"crossed-principe","start":10,"len":11,"fx":"laser","custom":true,"stepGap":0},{"id":"crossed-nuit","start":20,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"crossed-famille","start":30,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"hilton","start":40,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig","start":50,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"zadig-lieux","start":60,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"croquis","start":70,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"alassio","start":80,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"emme-monaco","start":90,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"variations","start":100,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"variations-detail","start":110,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"variations-paris","start":120,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"emme-moule","start":130,"len":11,"fx":"","custom":false,"stepGap":0.42},{"id":"moules","start":140,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"emme-djeddah","start":150,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"beton-bois","start":160,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"acier-beton","start":170,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"ligne","start":180,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"monolithe","start":190,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"blanc","start":200,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"fontvieille","start":210,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"kj","start":220,"len":11,"fx":"glow","custom":false,"stepGap":0},{"id":"kj-prix","start":230,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"kj-technique","start":240,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"usinage","start":250,"len":11,"fx":"","custom":false,"stepGap":0},{"id":"fonderie","start":260,"len":11,"fx":"","custom":false,"stepGap":0.5},{"id":"merci","start":270,"len":11,"fx":"end","custom":false,"stepGap":0}]};
+      window.DECK = {"total":281,"step":10,"len":11,"scenes":[{"id":"cover","start":0,"len":11,"fx":"cover","custom":true,"stepGap":0},{"id":"crossed-principe","start":10,"len":11,"fx":"laser","custom":true,"stepGap":0},{"id":"crossed-nuit","start":20,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"crossed-famille","start":30,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"hilton","start":40,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig","start":50,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig-lieux","start":60,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"croquis","start":70,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"alassio","start":80,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-monaco","start":90,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations","start":100,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-detail","start":110,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-paris","start":120,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-moule","start":130,"len":11,"fx":"","custom":true,"stepGap":0.42},{"id":"moules","start":140,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-djeddah","start":150,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"beton-bois","start":160,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"acier-beton","start":170,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"ligne","start":180,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"monolithe","start":190,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"blanc","start":200,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fontvieille","start":210,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj","start":220,"len":11,"fx":"glow","custom":true,"stepGap":0},{"id":"kj-prix","start":230,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj-technique","start":240,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"usinage","start":250,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fonderie","start":260,"len":11,"fx":"","custom":true,"stepGap":0.5},{"id":"merci","start":270,"len":11,"fx":"end","custom":true,"stepGap":0}]};
     </script>
     <script>
 // Chorégraphies des scènes. Chaque fonction écrit ses animations dans la timeline commune « tl »
 // à partir de t0 (début de la scène). La transition diagonale occupe [t0 ; t0 + 0,95] ;
 // la zone [t0 + 6,8 ; t0 + 9,9] ne contient que des mouvements lents (elle est rejouée en aller-retour).
+// Aucune lumière, aucun halo : le mouvement vient du cadre, de la caméra et du dessin.
 window.SCENES = {};
 
 // 1. Couverture -----------------------------------------------------------------------------
 SCENES.cover = function (K, tl, f, t0) {
+  var frame = K.q(f, '.mframe');
   var mts = K.qa(f, '.mt');
   var count = K.q(f, '.count');
-  var T0 = t0 + 0.3, DT = 0.13;
+  K.diag(tl, frame, 1180, 664, t0 + 0.05, 0.6);
+  var T0 = t0 + 0.4, DT = 0.13;
   mts.forEach(function (m, k) {
     tl.set(m, { opacity: 1 }, T0 + k * DT);
-    tl.set(m, { opacity: 0 }, T0 + (k + 1) * DT);
-    tl.fromTo(m.querySelector('img'), { scale: 1.12 }, { scale: 1, duration: DT, ease: 'none' }, T0 + k * DT);
+    if (k < mts.length - 1) tl.set(m, { opacity: 0 }, T0 + (k + 1) * DT);
+    tl.fromTo(m.querySelector('img'), { scale: 1.1 }, { scale: 1, duration: DT, ease: 'none' }, T0 + k * DT);
     K.cue(tl, 'tick', T0 + k * DT);
   });
   var end = T0 + mts.length * DT;
@@ -892,166 +812,105 @@ SCENES.cover = function (K, tl, f, t0) {
     v: 2026, duration: mts.length * DT, ease: 'none', immediateRender: false,
     onUpdate: function () { count.textContent = Math.round(c.v); }
   }, T0);
-  // Le compteur, géant au centre pendant le montage, rejoint sa place à côté de « 2008– ».
+  // Le compteur, en grand à droite du cadre pendant le montage, rejoint sa place à côté de « 2008– ».
   var cx = count.offsetLeft + count.offsetWidth / 2, cy = count.offsetTop + count.offsetHeight / 2;
-  tl.fromTo(count, { x: 960 - cx, y: 540 - cy, scale: 3.75 }, { x: 0, y: 0, scale: 1, duration: 1.1, ease: 'expo.inOut' }, end + 0.1);
-  tl.fromTo(K.q(f, '.y0'), { opacity: 0, x: 40, filter: 'blur(12px)' }, { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, end + 0.9);
-  K.draw(tl, K.q(f, '.cover-line line'), end + 0.4, 1.1);
-  K.cue(tl, 'whoosh', end + 0.4);
-  tl.fromTo(K.qa(f, '.cover-title .rise'), { yPercent: 105 }, { yPercent: 0, duration: 1.3, ease: 'expo.out', stagger: 0.11 }, end + 0.7);
-  tl.fromTo(K.q(f, '.wordmark'), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, end + 1.1);
-  K.wordsIn(tl, K.qa(f, '.byline .w'), end + 1.3);
-  K.drift(tl, K.q(f, '.cam'), t0 + 4.2, t0 + 11, { scale: 1 }, { scale: 1.025 });
+  tl.fromTo(count, { x: 1600 - cx, y: 470 - cy, scale: 2.1 }, { x: 0, y: 0, scale: 1, duration: 1.1, ease: 'expo.inOut' }, end + 0.35);
+  K.diag(tl, frame, 1180, 664, end + 0.05, 0.8, true);
+  tl.fromTo(K.q(f, '.y0'), { opacity: 0, x: 40, filter: 'blur(12px)' }, { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, end + 1.1);
+  K.draw(tl, K.q(f, '.cover-line line'), end + 0.6, 1.1);
+  K.cue(tl, 'whoosh', end + 0.6);
+  tl.fromTo(K.qa(f, '.cover-title .rise'), { yPercent: 105 }, { yPercent: 0, duration: 1.3, ease: 'expo.out', stagger: 0.11 }, end + 0.9);
+  tl.fromTo(K.q(f, '.wordmark'), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, end + 1.3);
+  K.wordsIn(tl, K.qa(f, '.byline .w'), end + 1.5);
+  K.drift(tl, K.q(f, '.cam'), t0 + 4.6, t0 + 11, { scale: 1 }, { scale: 1.025 });
 };
 
-// 2. Crossed : découpe laser ligne à ligne, puis pliage du profil en cinq temps -------------
+// 2. Crossed : la tôle est découpée, puis elle se plie en 3D le long de ses cinq lignes ------
 SCENES['crossed-principe'] = function (K, tl, f, t0) {
-  var sheet = K.q(f, '.sheet');
-  var img = sheet.querySelector('img');
-  var head = K.q(f, '.laser-head');
-  var sparks = K.qa(f, '.spark');
-  var W = 860, H = 960, ROWS = 12, RH = H / ROWS, T = 2.6, ts = t0 + 0.45;
+  var cam = K.q(f, '.f3-cam');
+  var flat = K.q(f, '.f3-flat');
+  var head = K.q(f, '.cut-head');
+  var root3 = K.q(f, '.f3.root');
+  var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.4, ts = t0 + 0.45;
+  // à plat, à gauche : la découpe ligne à ligne (trait net, sans lueur)
+  tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 }, { x: 160, y: 10, scale: 0.88, duration: 0.01 }, t0);
   var pr = { p: 0 };
   function raster() {
     var P = pr.p * ROWS;
     var r = Math.min(ROWS - 1, Math.floor(P));
     var x = pr.p >= 1 ? W : (P - r) * W;
     var y0 = r * RH, y1 = (r + 1) * RH;
-    img.style.clipPath = 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
-    var active = pr.p > 0 && pr.p < 1;
-    head.style.opacity = active ? '1' : '0';
+    flat.style.clipPath = pr.p >= 1 ? 'none' : 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
+    head.style.opacity = pr.p > 0 && pr.p < 1 ? '1' : '0';
     head.style.transform = 'translate(' + x + 'px,' + y0 + 'px)';
-    var tau = pr.p * T, life = 0.42;
-    sparks.forEach(function (sp, k) {
-      var phase = k * life / sparks.length;
-      var age = (((tau - phase) % life) + life) % life;
-      var te = tau - age;
-      if (!active || te < 0) { sp.style.opacity = '0'; return; }
-      var Pe = te / T * ROWS, re = Math.floor(Pe);
-      var xe = (Pe - re) * W, ye = (re + 0.5) * RH;
-      var vx = (K.hash(k, 1) - 0.7) * 700, vy = -160 - K.hash(k, 2) * 460;
-      sp.style.opacity = String(1 - age / life);
-      sp.style.transform = 'translate(' + (xe + vx * age) + 'px,' + (ye + vy * age + 1300 * age * age) + 'px)';
-    });
   }
   raster();
   tl.fromTo(pr, { p: 0 }, { p: 1, duration: T, ease: 'none', onUpdate: raster, immediateRender: false }, ts);
   K.cue(tl, 'laser', ts);
-
-  // Profil vu de côté, relevé sur le schéma : pied, avant d'assise, arrière d'assise, haut du dossier, dos.
-  // La tôle part à plat sous le schéma ; chaque sommet rejoint sa place l'un après l'autre.
-  var P = [[1241, 719], [1274, 711], [1196, 591], [1301, 575], [1357, 450], [1391, 735]];
-  var F = [], acc = 0;
-  for (var i = 0; i < P.length; i++) {
-    if (i > 0) acc += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]) * 0.78;
-    F.push([1170 + acc, 960]);
-  }
-  var q = [0, 0, 0, 0, 0, 0];
-  var poly = K.q(f, '.profile');
-  var nums = K.qa(f, '.fold-num');
-  function shape() {
-    var pts = P.map(function (p, k) {
-      return [F[k][0] + (p[0] - F[k][0]) * q[k], F[k][1] + (p[1] - F[k][1]) * q[k]];
-    });
-    poly.setAttribute('points', pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '));
-    nums.forEach(function (n, j) {
-      var v = pts[j + 1];
-      n.setAttribute('transform', 'translate(' + (v[0] - 34).toFixed(1) + ',' + (v[1] - 26).toFixed(1) + ')');
-    });
-  }
-  shape();
-  var tf = t0 + 3.1;
-  K.draw(tl, poly, tf, 0.5, { ease: 'power2.out' });
-  K.cue(tl, 'draw', tf);
-  var bands = K.qa(f, '.band');
-  [0, 1, 2, 3, 4, 5].forEach(function (k) {
-    var o = { v: 0 };
-    var at = tf + 0.5 + k * 0.42;
-    tl.fromTo(o, { v: 0 }, {
-      v: 1, duration: 0.7, ease: 'power3.inOut', immediateRender: false,
-      onUpdate: function () { q[k] = o.v; shape(); }
-    }, at);
-    if (k === 0) return;
-    var j = k - 1;
-    tl.fromTo(nums[j].firstElementChild, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', transformOrigin: '50% 50%' }, at + 0.55);
-    // la ligne de pli correspondante s'allume sur la tôle
-    tl.fromTo(bands[4 - j], { opacity: 0 }, { opacity: 0.55, duration: 0.15, ease: 'power1.out' }, at + 0.3);
-    tl.to(bands[4 - j], { opacity: 0.12, duration: 0.9, ease: 'power2.out' }, at + 0.5);
-    K.cue(tl, 'tick', at + 0.55);
+  // la tôle découpée passe en 3D : même image, découpée en six bandes articulées
+  tl.fromTo(root3, { opacity: 0 }, { opacity: 1, duration: 0.01 }, ts + T + 0.1);
+  tl.fromTo(flat, { opacity: 1 }, { opacity: 0, duration: 0.01, immediateRender: false }, ts + T + 0.1);
+  tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 },
+    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.1, ease: 'power3.inOut', immediateRender: false }, t0 + 3.0);
+  K.cue(tl, 'whoosh', t0 + 3.0);
+  // pli après pli, dans l'ordre des numéros gravés sur la tôle
+  var folds = [
+    ['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]
+  ];
+  tl.fromTo(root3, { rotationX: 0 }, { rotationX: -6.8, duration: 0.5, ease: 'power2.inOut' }, t0 + 4.1);
+  // compteur de plis « 1/5 … 5/5 » à droite, et la caméra suit la tôle qui se replie
+  var counter = K.q(f, '.fold-count'), strip = K.q(f, '.fc-strip');
+  tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.0);
+  tl.fromTo(strip, { yPercent: 0 }, { yPercent: 0, duration: 0.01 }, t0);
+  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.6, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
+  folds.forEach(function (fd, k) {
+    var el = f.querySelector('.f3' + fd[0]);
+    var at = t0 + 4.1 + k * 0.52;
+    tl.fromTo(el, { rotationX: 0 }, { rotationX: fd[1], duration: 0.55, ease: 'power2.inOut' }, at);
+    if (k > 0) tl.fromTo(strip, { yPercent: -(k - 1) * 20 }, { yPercent: -k * 20, duration: 0.45, ease: 'expo.out', immediateRender: false }, at);
+    K.cue(tl, 'tick', at + 0.3);
   });
-  var fig = K.q(f, '.fold-img');
-  tl.fromTo(fig, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power2.inOut' }, tf + 3.2);
-  tl.to(nums, { opacity: 0, duration: 0.4, ease: 'power1.out' }, tf + 3.9);
-  tl.to(poly, { opacity: 0, duration: 0.6, ease: 'power1.out' }, tf + 3.9);
   K.caption(tl, f, t0 + 0.7);
-  // respiration : un balayage laser lent parcourt la tôle
-  var scan = K.q(f, '.scan');
-  tl.fromTo(scan, { opacity: 0, y: 0 }, { opacity: 0.65, duration: 0.6 }, t0 + 6.4);
-  tl.fromTo(scan, { y: 0 }, { y: H, duration: 4.4, ease: 'none', immediateRender: false }, t0 + 6.6);
-  K.drift(tl, sheet, t0 + 3.2, t0 + 11, { scale: 1 }, { scale: 1.02 });
+  // respiration : le banc plié tourne lentement
+  K.drift(tl, cam, t0 + 6.8, t0 + 11, { rotationY: -36, rotationX: -16 }, { rotationY: -50, rotationX: -18 });
 };
 
-// 3. Crossed de nuit : le mot dans le noir, puis les lumières s'allument -------------------
+// 3. Crossed de nuit : la photo se recompose en lattes, puis cadrage du banc ------------------
 SCENES['crossed-nuit'] = function (K, tl, f, t0) {
   var cam = K.q(f, '.cam');
-  var dark = K.q(f, '.dark');
-  var spots = K.qa(f, '.spot');
-  var chars = K.qa(f, '.bigword .ch');
-  tl.fromTo(cam, { scale: 1.14, x: -40 }, { scale: 1, x: 0, duration: 6.2, ease: 'power2.out' }, t0);
-  tl.fromTo(chars, { opacity: 0, yPercent: 40, filter: 'blur(18px)' },
-    { opacity: 1, yPercent: 0, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out', stagger: 0.06 }, t0 + 0.5);
-  gsap.set(dark, { '--r1': '0px', '--r2': '0px', '--r3': '0px', '--r4': '0px' });
-  function flick(spot, at) {
-    tl.fromTo(spot, { opacity: 0 }, { opacity: 0.9, duration: 0.05 }, at);
-    tl.to(spot, { opacity: 0.15, duration: 0.05 }, at + 0.09);
-    tl.to(spot, { opacity: 1, duration: 0.08 }, at + 0.2);
-    K.cue(tl, 'light', at);
-  }
-  flick(spots[0], t0 + 1.9);
-  tl.fromTo(dark, { '--r1': '0px' }, { '--r1': '760px', duration: 1.8, ease: 'power2.out', immediateRender: false }, t0 + 1.95);
-  flick(spots[1], t0 + 2.4);
-  tl.fromTo(dark, { '--r2': '0px' }, { '--r2': '700px', duration: 1.8, ease: 'power2.out', immediateRender: false }, t0 + 2.45);
-  flick(spots[2], t0 + 2.9);
-  tl.fromTo(dark, { '--r3': '0px' }, { '--r3': '1300px', duration: 2.2, ease: 'power2.out', immediateRender: false }, t0 + 2.95);
-  tl.fromTo(dark, { '--r4': '0px' }, { '--r4': '2400px', duration: 2.0, ease: 'power1.in', immediateRender: false }, t0 + 3.4);
-  tl.fromTo(dark, { opacity: 1 }, { opacity: 0, duration: 1.2, ease: 'power1.inOut' }, t0 + 4.2);
-  tl.fromTo(chars, { opacity: 1, yPercent: 0, filter: 'blur(0px)' },
-    { opacity: 0, yPercent: -30, filter: 'blur(14px)', duration: 0.8, ease: 'power2.in', stagger: 0.04, immediateRender: false }, t0 + 3.1);
-  K.caption(tl, f, t0 + 4.3);
-  K.drift(tl, cam, t0 + 6.2, t0 + 11, { scale: 1, x: 0 }, { scale: 1.04, x: -24 });
-  spots.forEach(function (sp, k) {
-    tl.fromTo(sp, { opacity: 1 }, { opacity: 0.72, duration: 0.7 + k * 0.23, ease: 'sine.inOut', yoyo: true, repeat: 5, immediateRender: false }, t0 + 6.4);
+  K.qa(f, '.strip').forEach(function (s, k) {
+    tl.fromTo(s, { yPercent: k % 2 ? 100 : -100 }, { yPercent: 0, duration: 1.1, ease: 'power4.out' }, t0 + 0.35 + K.hash(k, 3) * 0.45);
   });
+  K.cue(tl, 'whoosh', t0 + 0.4);
+  tl.fromTo(cam, { scale: 1.1 }, { scale: 1, duration: 4.2, ease: 'power2.out' }, t0 + 0.3);
+  K.draw(tl, f.querySelectorAll('.bk path'), t0 + 2.6, 0.6, { stagger: 0.06 });
+  K.cue(tl, 'tick', t0 + 2.6);
+  K.caption(tl, f, t0 + 1.6);
+  K.drift(tl, cam, t0 + 6.4, t0 + 11, { scale: 1, x: 0 }, { scale: 1.04, x: -20 });
 };
 
 // 4. La famille Crossed : triptyque ---------------------------------------------------------
 SCENES['crossed-famille'] = function (K, tl, f, t0) {
-  K.caption(tl, f, t0 + 0.35);
   K.qa(f, '.pn').forEach(function (pn, k) {
-    var at = t0 + 0.75 + k * 0.16;
+    var at = t0 + 0.4 + k * 0.16;
     var img = pn.querySelector('img');
     tl.fromTo(pn, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
     tl.fromTo(img, { y: 240, scale: 1.14 }, { y: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, at);
-    var tag = pn.querySelector('.tag');
-    tl.fromTo(tag, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'expo.out' }, at + 1.1);
-    K.wordsIn(tl, tag.querySelectorAll('.w'), at + 1.2, { y: 8, blur: 6, stagger: 0.04 });
-    K.cue(tl, 'tick', at);
-    K.drift(tl, img, t0 + 3.2, t0 + 11, { y: 0 }, { y: k % 2 ? 30 : -30 });
+    K.cue(tl, 'tick', at + 0.3);
+    K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: k % 2 ? 26 : -26 });
   });
+  K.caption(tl, f, t0 + 1.4);
 };
 
 // 5. Hilton : travelling du banc à la jardinière, puis vue d'ensemble ------------------------
 SCENES.hilton = function (K, tl, f, t0) {
   var world = K.q(f, '.world');
-  var tagA = K.q(f, '.tag-a'), tagB = K.q(f, '.tag-b');
-  var cam = { fx: 335, fy: 665, s: 2.0 };
+  var cam = { fx: 323, fy: 538, s: 2.0 };
   function apply() {
     var s = cam.s;
     var tx = K.clamp(960 - cam.fx * s, 1920 - 1920 * s, 0);
-    var ty = K.clamp(540 - cam.fy * s, 1080 - 1080 * s, 0);
+    var ty = K.clamp(470 - cam.fy * s, 940 - 940 * s, 0);
     world.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + s.toFixed(4) + ')';
-    tagA.style.transform = 'translate(' + (tx + 60 * s).toFixed(1) + 'px,' + (ty + 800 * s).toFixed(1) + 'px)';
-    tagB.style.transform = 'translate(' + (tx + 1200 * s).toFixed(1) + 'px,' + (ty + 425 * s).toFixed(1) + 'px)';
   }
   apply();
   function move(to, at, dur, ease) {
@@ -1059,23 +918,343 @@ SCENES.hilton = function (K, tl, f, t0) {
     tl.fromTo(cam, from, Object.assign({ duration: dur, ease: ease, onUpdate: apply, immediateRender: false }, to), at);
     cam.fx = to.fx; cam.fy = to.fy; cam.s = to.s;
   }
-  move({ fx: 335, fy: 665, s: 2.25 }, t0, 2.7, 'power1.inOut');
-  move({ fx: 1370, fy: 265, s: 2.1 }, t0 + 2.75, 1.4, 'power3.inOut');
-  move({ fx: 1370, fy: 265, s: 2.2 }, t0 + 4.15, 0.6, 'none');
-  move({ fx: 960, fy: 540, s: 1 }, t0 + 4.75, 1.5, 'power3.inOut');
-  move({ fx: 900, fy: 520, s: 1.035 }, t0 + 6.25, 4.75, 'sine.inOut');
+  move({ fx: 323, fy: 538, s: 2.2 }, t0, 2.7, 'power1.inOut');
+  move({ fx: 1365, fy: 200, s: 2.05 }, t0 + 2.75, 1.4, 'power3.inOut');
+  move({ fx: 1365, fy: 200, s: 2.15 }, t0 + 4.15, 0.6, 'none');
+  move({ fx: 960, fy: 470, s: 1 }, t0 + 4.75, 1.5, 'power3.inOut');
+  move({ fx: 900, fy: 450, s: 1.035 }, t0 + 6.25, 4.75, 'sine.inOut');
   K.cue(tl, 'whoosh', t0 + 2.75);
   K.cue(tl, 'whoosh', t0 + 4.75);
-
   K.draw(tl, f.querySelectorAll('.bk-a path'), t0 + 1.0, 0.6, { stagger: 0.06 });
   K.cue(tl, 'tick', t0 + 1.0);
-  tl.fromTo(tagA, { clipPath: 'inset(0% 100% 0% 0%)', opacity: 1 }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.out' }, t0 + 1.3);
-  tl.to(tagA, { opacity: 0, duration: 0.3 }, t0 + 2.6);
-  K.draw(tl, f.querySelectorAll('.bk-b path'), t0 + 3.7, 0.6, { stagger: 0.06 });
-  K.cue(tl, 'tick', t0 + 3.7);
-  tl.fromTo(tagB, { clipPath: 'inset(0% 100% 0% 0%)', opacity: 1 }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.out' }, t0 + 3.95);
-  tl.to(tagB, { opacity: 0, duration: 0.3 }, t0 + 4.6);
-  K.caption(tl, f, t0 + 5.9);
+  K.draw(tl, f.querySelectorAll('.bk-b path'), t0 + 3.6, 0.6, { stagger: 0.06 });
+  K.cue(tl, 'tick', t0 + 3.6);
+  K.caption(tl, f, t0 + 5.4);
+};
+
+// 6. Zadig : la photo apparaît à travers une trame de perforations ---------------------------
+SCENES.zadig = function (K, tl, f, t0) {
+  var circles = K.qa(f, '.perf circle');
+  var O = [1150, 630], SPEED = 1000, RAMP = 220, RMAX = 44;
+  var dist = circles.map(function (c, k) {
+    var x = Number(c.getAttribute('cx')), y = Number(c.getAttribute('cy'));
+    return Math.hypot(x - O[0], y - O[1]) + K.hash(k, 7) * 160;
+  });
+  var pr = { t: 0 };
+  function grow() {
+    var front = pr.t * SPEED;
+    for (var k = 0; k < circles.length; k++) {
+      var v = K.clamp((front - dist[k]) / RAMP, 0, 1);
+      circles[k].setAttribute('r', (v * RMAX).toFixed(1));
+    }
+  }
+  grow();
+  tl.fromTo(pr, { t: 0 }, { t: 2.2, duration: 2.2, ease: 'power1.in', onUpdate: grow, immediateRender: false }, t0 + 0.4);
+  K.cue(tl, 'draw', t0 + 0.4);
+  var cam = K.q(f, '.cam');
+  tl.fromTo(cam, { scale: 1.08 }, { scale: 1, duration: 5, ease: 'power2.out' }, t0 + 0.3);
+  K.caption(tl, f, t0 + 2.2);
+  K.drift(tl, cam, t0 + 5.4, t0 + 11, { scale: 1 }, { scale: 1.04 });
+};
+
+// 7. Zadig à Bergen et Milan : le détail perforé, en gros plan, rejoint sa place -------------
+SCENES['zadig-lieux'] = function (K, tl, f, t0) {
+  var det = K.q(f, '.detail'), mus = K.q(f, '.museum'), mil = K.q(f, '.milan');
+  tl.fromTo(det.querySelector('img'), { scale: 1.12 }, { scale: 1, duration: 1.4, ease: 'power1.out' }, t0 + 0.2);
+  tl.fromTo(det, { x: 960 - 1515, y: 470 - 707.5, scale: 2.37 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.5);
+  K.cue(tl, 'whoosh', t0 + 1.5);
+  K.reveal(tl, mus, 'left', t0 + 1.7, { dur: 1.1 });
+  K.reveal(tl, mil, 'down', t0 + 1.9, { dur: 1.0 });
+  K.caption(tl, f, t0 + 2.7);
+  K.drift(tl, mus.querySelector('img'), t0 + 4.2, t0 + 11, { scale: 1 }, { scale: 1.05 });
+  K.drift(tl, mil.querySelector('img'), t0 + 3.6, t0 + 11, { x: 0 }, { x: -24 });
+};
+
+// 8. Du croquis au banc ----------------------------------------------------------------------
+SCENES.croquis = function (K, tl, f, t0) {
+  K.reveal(tl, K.q(f, '.sk2'), 'draw', t0 + 0.4);
+  K.cue(tl, 'draw', t0 + 0.4);
+  K.reveal(tl, K.q(f, '.sk1'), 'draw', t0 + 1.5);
+  K.cue(tl, 'draw', t0 + 1.5);
+  tl.fromTo(K.qa(f, '.slat'), { x: 180, opacity: 0 }, { x: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.07 }, t0 + 2.8);
+  K.cue(tl, 'tick', t0 + 2.8);
+  K.caption(tl, f, t0 + 0.9);
+  K.drift(tl, K.q(f, '.slats'), t0 + 4.6, t0 + 11, { scale: 1 }, { scale: 1.035 });
+};
+
+// 9. Alassio --------------------------------------------------------------------------------
+SCENES.alassio = function (K, tl, f, t0) {
+  var sea = K.q(f, '.sea'), park = K.q(f, '.park');
+  K.diag(tl, sea, 1290, 940, t0 + 0.35, 1.2);
+  tl.fromTo(sea.querySelector('img'), { x: 46 }, { x: -46, duration: 10.6, ease: 'none' }, t0 + 0.4);
+  K.reveal(tl, park, 'up', t0 + 1.3, { zoom: false });
+  tl.fromTo(park.querySelector('img'), { y: 90 }, { y: 0, duration: 1.8, ease: 'expo.out' }, t0 + 1.3);
+  K.caption(tl, f, t0 + 2.0);
+  K.drift(tl, park.querySelector('img'), t0 + 3.2, t0 + 11, { y: 0 }, { y: -30 });
+};
+
+// 10. Emme à Monte-Carlo ----------------------------------------------------------------------
+SCENES['emme-monaco'] = function (K, tl, f, t0) {
+  var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam'), view = K.q(f, '.view');
+  K.diag(tl, walk, 1300, 940, t0 + 0.35, 1.1);
+  tl.fromTo(cam, { scale: 1 }, { scale: 1.12, duration: 6.4, ease: 'power1.inOut', transformOrigin: '55% 50%' }, t0 + 0.3);
+  K.draw(tl, f.querySelectorAll('.bk path'), t0 + 3.0, 0.6, { stagger: 0.06 });
+  K.cue(tl, 'tick', t0 + 3.0);
+  K.reveal(tl, view, 'down', t0 + 1.3, { zoom: false });
+  tl.fromTo(view.querySelector('img'), { y: -70 }, { y: 0, duration: 1.8, ease: 'expo.out' }, t0 + 1.3);
+  K.caption(tl, f, t0 + 2.2);
+  K.drift(tl, cam, t0 + 6.7, t0 + 11, { scale: 1.12 }, { scale: 1.16 });
+};
+
+// 11. Variations : balayage circulaire ----------------------------------------------------------
+SCENES.variations = function (K, tl, f, t0) {
+  var ring = K.q(f, '.ring'), snake = K.q(f, '.snake');
+  var C = [557, 452], R = 1600, A0 = -200;
+  var pr = { a: 0 };
+  function sweep() {
+    if (pr.a >= 360) { ring.style.clipPath = 'none'; return; }
+    var pts = [C[0] + 'px ' + C[1] + 'px'];
+    for (var a = 0; a <= pr.a; a += 8) pts.push(sector(a));
+    pts.push(sector(pr.a));
+    ring.style.clipPath = 'polygon(' + pts.join(',') + ')';
+  }
+  function sector(a) {
+    var r = (A0 + a) * Math.PI / 180;
+    return (C[0] + Math.cos(r) * R).toFixed(1) + 'px ' + (C[1] + Math.sin(r) * R).toFixed(1) + 'px';
+  }
+  sweep();
+  tl.fromTo(pr, { a: 0 }, { a: 360, duration: 1.8, ease: 'power2.inOut', onUpdate: sweep, immediateRender: false }, t0 + 0.4);
+  K.cue(tl, 'whoosh', t0 + 0.4);
+  tl.fromTo(snake, { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 1.3, ease: 'expo.out' }, t0 + 1.9);
+  K.caption(tl, f, t0 + 1.0);
+  K.drift(tl, ring.querySelector('img'), t0 + 2.4, t0 + 11, { scale: 1 }, { scale: 1.04 });
+  K.drift(tl, snake, t0 + 3.4, t0 + 11, { x: 0 }, { x: -16 });
+};
+
+// 12. Variations, esquisse --------------------------------------------------------------------
+SCENES['variations-detail'] = function (K, tl, f, t0) {
+  var back = K.q(f, '.back');
+  K.reveal(tl, K.q(f, '.sketch'), 'draw', t0 + 0.4);
+  K.cue(tl, 'draw', t0 + 0.4);
+  K.reveal(tl, back, 'up', t0 + 1.2, { zoom: false });
+  tl.fromTo(back.querySelector('.cam'), { scale: 1 }, { scale: 1.16, duration: 9.6, ease: 'power1.inOut', transformOrigin: '50% 22%' }, t0 + 1.2);
+  K.caption(tl, f, t0 + 1.0);
+};
+
+// 13. Variations à Paris : plongée aérienne, puis la place s'ouvre en cercle ------------------
+SCENES['variations-paris'] = function (K, tl, f, t0) {
+  var aerial = K.q(f, '.aerial'), ground = K.q(f, '.ground');
+  K.reveal(tl, aerial, 'down', t0 + 0.35, { zoom: false });
+  tl.fromTo(aerial.querySelector('.cam'), { scale: 1 }, { scale: 1.28, duration: 10.4, ease: 'power1.inOut' }, t0 + 0.35);
+  tl.fromTo(ground, { clipPath: 'circle(0% at 40% 62%)' }, { clipPath: 'circle(85% at 40% 62%)', duration: 1.5, ease: 'power3.inOut' }, t0 + 1.2);
+  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 1.2);
+  K.cue(tl, 'whoosh', t0 + 1.2);
+  K.caption(tl, f, t0 + 2.0);
+  K.drift(tl, ground.querySelector('img'), t0 + 3.8, t0 + 11, { scale: 1 }, { scale: 1.04 });
+};
+
+// 14. Emme, moulage : quatre temps, chacun avec son geste --------------------------------------
+SCENES['emme-moule'] = function (K, tl, f, t0) {
+  var render = K.q(f, '.render');
+  K.reveal(tl, render, 'up', t0 + 0.35, { zoom: false });
+  tl.fromTo(render, { y: 60 }, { y: 0, duration: 1.4, ease: 'expo.out' }, t0 + 0.35);
+  var arrows = K.qa(f, '.arw');
+  // 1. le moule arrive
+  tl.fromTo(K.q(f, '.step1'), { x: -70, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'expo.out' }, t0 + 1.5);
+  K.cue(tl, 'tick', t0 + 1.5);
+  K.draw(tl, arrows[0], t0 + 2.0, 0.4);
+  // 2. la coulée monte
+  tl.fromTo(K.q(f, '.step2'), { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'power2.inOut' }, t0 + 2.3);
+  K.cue(tl, 'tick', t0 + 2.3);
+  K.draw(tl, arrows[1], t0 + 3.1, 0.4);
+  // 3. le retournement
+  tl.fromTo(K.q(f, '.step3'), { rotation: -180, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.0, ease: 'power3.inOut' }, t0 + 3.4);
+  K.cue(tl, 'tick', t0 + 3.4);
+  K.draw(tl, arrows[2], t0 + 4.3, 0.4);
+  // 4. le démoulage
+  tl.fromTo(K.q(f, '.step4'), { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out' }, t0 + 4.6);
+  K.cue(tl, 'thud', t0 + 4.7);
+  K.caption(tl, f, t0 + 0.8);
+  K.drift(tl, render, t0 + 5.2, t0 + 11, { y: 0 }, { y: -10 });
+};
+
+// 15. Les moules : la photo se recompose en planches ---------------------------------------------
+SCENES.moules = function (K, tl, f, t0) {
+  var cam = K.q(f, '.cam');
+  K.qa(f, '.plank').forEach(function (p, k) {
+    tl.fromTo(p, { xPercent: k % 2 ? 105 : -105 }, { xPercent: 0, duration: 1.1, ease: 'power4.out' }, t0 + 0.35 + K.hash(k, 5) * 0.5);
+  });
+  K.cue(tl, 'whoosh', t0 + 0.4);
+  tl.fromTo(cam, { scale: 1.08 }, { scale: 1, duration: 4, ease: 'power2.out' }, t0 + 0.3);
+  K.caption(tl, f, t0 + 1.6);
+  K.drift(tl, cam, t0 + 5.2, t0 + 11, { x: 0, scale: 1 }, { x: -34, scale: 1.03 });
+};
+
+// 16. Emme à Djeddah : survol de la corniche, puis la photo des bancs ------------------------------
+SCENES['emme-djeddah'] = function (K, tl, f, t0) {
+  var aer = K.q(f, '.aer'), ai = aer.querySelector('img'), ground = K.q(f, '.ground');
+  var S1 = 1100 / 624, S2 = 0.9936;
+  tl.fromTo(aer, { clipPath: 'inset(0px 410px 0px 410px)' }, { clipPath: 'inset(0px 410px 0px 410px)', duration: 0.01 }, t0);
+  tl.fromTo(ai, { x: 410, y: -264, scale: S1 }, { x: 410, y: -964, scale: S1, duration: 3.0, ease: 'power1.inOut' }, t0 + 0.3);
+  tl.fromTo(ai, { x: 410, y: -964, scale: S1 }, { x: 1300, y: -80, scale: S2, duration: 1.2, ease: 'power3.inOut', immediateRender: false }, t0 + 3.4);
+  tl.fromTo(aer, { clipPath: 'inset(0px 410px 0px 410px)' }, { clipPath: 'inset(0px 0px 0px 1300px)', duration: 1.2, ease: 'power3.inOut', immediateRender: false }, t0 + 3.4);
+  K.cue(tl, 'whoosh', t0 + 3.4);
+  K.reveal(tl, ground, 'left', t0 + 3.7);
+  K.caption(tl, f, t0 + 4.4);
+  K.drift(tl, ai, t0 + 6.2, t0 + 11, { y: -80 }, { y: -125 });
+};
+
+// 17. Banc béton et bois : mise au point, puis traits de cote ---------------------------------------
+SCENES['beton-bois'] = function (K, tl, f, t0) {
+  var cam = K.q(f, '.cam'), img = K.q(f, '.focus');
+  tl.fromTo(img, { filter: 'blur(18px)', scale: 1.06 }, { filter: 'blur(0px)', scale: 1, duration: 2.0, ease: 'power2.out' }, t0 + 0.35);
+  K.draw(tl, f.querySelectorAll('.bk path'), t0 + 2.4, 0.6, { stagger: 0.06 });
+  K.draw(tl, f.querySelectorAll('.dim-line'), t0 + 2.9, 0.8, { stagger: 0.2 });
+  tl.fromTo(f.querySelectorAll('.dim-tick'), { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.2 }, t0 + 2.9);
+  K.cue(tl, 'draw', t0 + 2.9);
+  K.caption(tl, f, t0 + 1.4);
+  K.drift(tl, cam, t0 + 4.4, t0 + 11, { scale: 1 }, { scale: 1.035 });
+};
+
+// 18. Banc acier et béton : travelling latéral, puis contour ------------------------------------------
+SCENES['acier-beton'] = function (K, tl, f, t0) {
+  var cam = K.q(f, '.cam');
+  tl.fromTo(cam, { x: 90, scale: 1.1 }, { x: 0, scale: 1, duration: 3.6, ease: 'power3.out' }, t0 + 0.3);
+  K.draw(tl, f.querySelectorAll('.bk path'), t0 + 3.0, 0.6, { stagger: 0.06 });
+  K.draw(tl, f.querySelectorAll('.dim-line'), t0 + 3.5, 0.8);
+  tl.fromTo(f.querySelectorAll('.dim-tick'), { opacity: 0 }, { opacity: 1, duration: 0.3 }, t0 + 3.5);
+  K.cue(tl, 'draw', t0 + 3.0);
+  K.caption(tl, f, t0 + 1.4);
+  K.drift(tl, cam, t0 + 4.4, t0 + 11, { x: 0, scale: 1 }, { x: -18, scale: 1.03 });
+};
+
+// 19. Ligne ----------------------------------------------------------------------------------------
+SCENES.ligne = function (K, tl, f, t0) {
+  var photo = K.q(f, '.photo');
+  K.reveal(tl, photo, 'up', t0 + 0.35, { zoom: false });
+  tl.fromTo(photo.querySelector('.cam'), { scale: 1.12 }, { scale: 1, duration: 3, ease: 'power2.out' }, t0 + 0.35);
+  K.reveal(tl, K.q(f, '.diagram'), 'draw', t0 + 1.6);
+  K.cue(tl, 'draw', t0 + 1.6);
+  K.caption(tl, f, t0 + 1.0);
+  K.drift(tl, photo.querySelector('.cam'), t0 + 3.4, t0 + 11, { scale: 1 }, { scale: 1.04 });
+};
+
+// 20. Banc monolithe ---------------------------------------------------------------------------------
+SCENES.monolithe = function (K, tl, f, t0) {
+  var photo = K.q(f, '.photo');
+  K.diag(tl, photo, 1040, 940, t0 + 0.35, 1.1);
+  tl.fromTo(photo.querySelector('.cam'), { x: -60, scale: 1.08 }, { x: 0, scale: 1.08, duration: 10.6, ease: 'none' }, t0 + 0.35);
+  K.reveal(tl, K.q(f, '.diagram'), 'draw', t0 + 1.8);
+  K.cue(tl, 'draw', t0 + 1.8);
+  K.caption(tl, f, t0 + 1.0);
+};
+
+// 21. Banc et jardinières : posés un à un ---------------------------------------------------------------
+SCENES.blanc = function (K, tl, f, t0) {
+  K.qa(f, '.obj').forEach(function (o, k) {
+    var at = t0 + 0.5 + [0, 0.8, 1.25][k];
+    tl.fromTo(o, { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, at);
+    K.cue(tl, 'thud', at + 0.55);
+    K.drift(tl, o, t0 + 3.2, t0 + 11, { x: 0 }, { x: k === 0 ? -10 : 10 });
+  });
+  K.caption(tl, f, t0 + 1.2);
+};
+
+// 22. Monaco : du port au crépuscule vers le banc et la jardinière ----------------------------------------
+SCENES.fontvieille = function (K, tl, f, t0) {
+  var dusk = K.q(f, '.dusk'), harbour = K.q(f, '.harbour'), planter = K.q(f, '.planter');
+  tl.fromTo(dusk.querySelector('img'), { scale: 1.1 }, { scale: 1, duration: 1.6, ease: 'power1.out' }, t0 + 0.1);
+  tl.fromTo(dusk, { x: 485, y: 237.5, scale: 2.0215 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.6);
+  K.cue(tl, 'whoosh', t0 + 1.6);
+  K.reveal(tl, harbour, 'left', t0 + 2.1);
+  K.reveal(tl, planter, 'up', t0 + 2.3, { zoom: false });
+  tl.fromTo(planter.querySelector('img'), { y: 120 }, { y: 0, duration: 1.9, ease: 'expo.out' }, t0 + 2.3);
+  K.caption(tl, f, t0 + 3.0);
+  K.drift(tl, planter.querySelector('img'), t0 + 4.4, t0 + 11, { scale: 1 }, { scale: 1.05 });
+};
+
+// 23. KJ : axes de construction, puis le luminaire se dévoile ------------------------------------------------
+SCENES.kj = function (K, tl, f, t0) {
+  var cam = K.q(f, '.cam');
+  K.draw(tl, f.querySelectorAll('.axis'), t0 + 0.4, 1.0, { stagger: 0.15 });
+  K.cue(tl, 'draw', t0 + 0.4);
+  K.reveal(tl, K.q(f, '.lamp'), 'draw', t0 + 1.3);
+  tl.to(f.querySelectorAll('.axis'), { opacity: 0.25, duration: 0.8, ease: 'power1.out' }, t0 + 3.4);
+  tl.fromTo(cam, { scale: 1.06 }, { scale: 1, duration: 6, ease: 'power2.out', transformOrigin: '36% 44%' }, t0 + 0.3);
+  K.caption(tl, f, t0 + 2.2);
+  K.drift(tl, cam, t0 + 6.3, t0 + 11, { scale: 1, rotation: 0 }, { scale: 1.03, rotation: -0.8 });
+};
+
+// 24. KJ, prix Design Plus --------------------------------------------------------------------------------------
+SCENES['kj-prix'] = function (K, tl, f, t0) {
+  var cam = K.q(f, '.cam');
+  tl.fromTo(cam, { x: -70, scale: 1.08 }, { x: 0, scale: 1, duration: 4.6, ease: 'power2.out' }, t0 + 0.3);
+  tl.fromTo(K.q(f, '.badge'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, t0 + 2.2);
+  K.draw(tl, K.q(f, '.ring'), t0 + 2.5, 1.0);
+  K.cue(tl, 'draw', t0 + 2.5);
+  K.caption(tl, f, t0 + 1.2);
+  K.drift(tl, cam, t0 + 5.0, t0 + 11, { x: 0, scale: 1 }, { x: 22, scale: 1.03 });
+};
+
+// 25. KJ, technique : vues, traits de rappel ---------------------------------------------------------------------
+SCENES['kj-technique'] = function (K, tl, f, t0) {
+  K.reveal(tl, K.q(f, '.side'), 'up', t0 + 0.35, { zoom: false, dur: 1.3 });
+  tl.fromTo(K.q(f, '.front'), { x: 140, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out' }, t0 + 1.2);
+  var leads = K.qa(f, '.lead'), dots = K.qa(f, '.lead-dot'), notes = K.qa(f, '.note');
+  [0, 1].forEach(function (k) {
+    var at = t0 + 2.4 + k * 0.7;
+    tl.fromTo(dots[k], { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', transformOrigin: '50% 50%' }, at);
+    K.draw(tl, leads[k], at + 0.1, 0.5);
+    tl.fromTo(notes[k], { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'steps(14)' }, at + 0.55);
+    K.cue(tl, 'tick', at);
+  });
+  K.caption(tl, f, t0 + 0.9);
+  K.drift(tl, K.q(f, '.front'), t0 + 2.4, t0 + 11, { y: 0 }, { y: -14 });
+};
+
+// 26. Le moule : trois colonnes comme des passes d'usinage ----------------------------------------------------------
+SCENES.usinage = function (K, tl, f, t0) {
+  K.qa(f, '.pn').forEach(function (pn, k) {
+    var at = t0 + 0.4 + k * 0.32;
+    var img = pn.querySelector('img');
+    tl.fromTo(pn, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power3.inOut' }, at);
+    tl.fromTo(img, { y: -200, scale: 1.12 }, { y: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, at);
+    K.cue(tl, 'tick', at + 0.3);
+    K.drift(tl, img, t0 + 3.2, t0 + 11, { y: 0 }, { y: k % 2 ? -26 : 26 });
+  });
+  K.caption(tl, f, t0 + 1.6);
+};
+
+// 27. Fonderie : les cinq temps, l'un après l'autre ------------------------------------------------------------------
+SCENES.fonderie = function (K, tl, f, t0) {
+  var steps = K.qa(f, '.step');
+  steps.forEach(function (s, k) {
+    tl.fromTo(s, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, t0 + 0.5 + k * 0.22);
+  });
+  K.cue(tl, 'tick', t0 + 0.5);
+  // un repère parcourt les étapes : l'étape en cours est pleine, les autres s'effacent
+  var cyc = { v: 0 };
+  function light() {
+    var active = Math.floor(cyc.v);
+    steps.forEach(function (s, j) {
+      var on = cyc.v >= 5 || j === active;
+      s.style.opacity = on ? '1' : '0.22';
+    });
+  }
+  tl.fromTo(cyc, { v: 0 }, { v: 5, duration: 3.4, ease: 'none', onUpdate: light, immediateRender: false }, t0 + 2.6);
+  K.draw(tl, K.q(f, '.track'), t0 + 2.6, 3.4, { ease: 'none' });
+  [0, 1, 2, 3, 4].forEach(function (k) { K.cue(tl, 'tick', t0 + 2.6 + k * 0.68); });
+  K.caption(tl, f, t0 + 1.0);
+};
+
+// 28. Merci -------------------------------------------------------------------------------------------------------------
+SCENES.merci = function (K, tl, f, t0) {
+  K.draw(tl, f.querySelector('.cover-line line'), t0 + 0.4, 1.0);
+  K.cue(tl, 'whoosh', t0 + 0.4);
+  tl.fromTo(f.querySelectorAll('.cover-title .rise'), { yPercent: 105 }, { yPercent: 0, duration: 1.3, ease: 'expo.out' }, t0 + 0.6);
+  tl.fromTo(f.querySelector('.wordmark'), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, t0 + 0.6);
+  K.wordsIn(tl, f.querySelectorAll('.byline .w'), t0 + 1.1);
+  K.drift(tl, f.querySelector('.cover'), t0 + 2.6, t0 + 11, { scale: 1 }, { scale: 1.02 });
 };
 
     </script>
@@ -1180,6 +1359,19 @@ SCENES.hilton = function (K, tl, f, t0) {
       if (img && o.zoom !== false) tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 2.3, ease: 'expo.out' }, t);
     },
 
+    // Coupe diagonale (l'angle de la ligne de couverture) qui fait apparaître, ou disparaître (out), un cadre w × h.
+    diag: function (tl, el, w, h, t, dur, out, ease) {
+      var k = h * 0.896, p = { t: -k - 10 };
+      var apply = function () {
+        var a = p.t, b = p.t + k;
+        el.style.clipPath = out
+          ? 'polygon(' + b + 'px 0px, ' + (w + 2000) + 'px 0px, ' + (w + 2000) + 'px ' + h + 'px, ' + a + 'px ' + h + 'px)'
+          : 'polygon(-2000px 0px, ' + b + 'px 0px, ' + a + 'px ' + h + 'px, -2000px ' + h + 'px)';
+      };
+      if (!out) apply();
+      tl.fromTo(p, { t: -k - 10 }, { t: w + 10, duration: dur, ease: ease || 'power3.inOut', onUpdate: apply, immediateRender: false }, t);
+    },
+
     // Mouvement lent continu (caméra qui dérive) entre t0 et t1.
     drift: function (tl, el, t0, t1, from, to) {
       tl.fromTo(el, from, Object.assign({ duration: t1 - t0, ease: 'sine.inOut', immediateRender: false }, to), t0);
@@ -1233,7 +1425,8 @@ SCENES.hilton = function (K, tl, f, t0) {
     var inner = frames[k].querySelector('.inner');
     var p = { t: -SLOPE - 20 };
     function apply() {
-      inner.style.clipPath = 'polygon(-2000px 0px, ' + (p.t + SLOPE) + 'px 0px, ' + p.t + 'px 1080px, -2000px 1080px)';
+      // une fois la coupe passée, plus aucun masque (un clip-path aplatirait la 3D de la scène)
+      inner.style.clipPath = p.t >= 1939 ? 'none' : 'polygon(-2000px 0px, ' + (p.t + SLOPE) + 'px 0px, ' + p.t + 'px 1080px, -2000px 1080px)';
       cutLine.setAttribute('x1', p.t + SLOPE); cutLine.setAttribute('y1', 0);
       cutLine.setAttribute('x2', p.t); cutLine.setAttribute('y2', 1080);
     }
