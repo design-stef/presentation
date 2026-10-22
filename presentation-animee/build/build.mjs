@@ -122,7 +122,7 @@ ${island}
     </script>
     <div id="deck" data-composition-id="root" data-start="0" data-duration="${total}" data-width="1920" data-height="1080">
 ${sceneHtml}
-      <svg id="cut" data-layout-allow-overflow viewBox="0 0 1920 1080" aria-hidden="true"><line id="cutline" x1="0" y1="0" x2="0" y2="1080" /></svg>
+      <svg id="cut" data-layout-allow-overflow viewBox="0 0 1920 1080" aria-hidden="true"><polygon id="cutacc" points="0,0 0,0 0,0" /><polygon id="cutband" points="0,0 0,0 0,0" /></svg>
       <div id="progress" aria-hidden="true"><i></i></div>
     </div>
     <script>

@@ -12,12 +12,13 @@
   if (/[?&]capture\b/.test(location.search)) gsap.ticker.lagSmoothing(0);
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SLOPE = 968; // décalage horizontal de la diagonale de couverture sur 1080 px
-  var WIPE = 0.95;
+  var WIPE = 1.0;
   var HOLD_END = D.step - 0.1; // fin de la partie jouée d'une scène (avant la transition suivante)
   var IDLE_FROM = 6.8; // début de la zone de respiration
   var frames = D.scenes.map(function (s) { return document.getElementById('sc-' + s.id); });
   var cutSvg = document.getElementById('cut');
-  var cutLine = document.getElementById('cutline');
+  var cutBand = document.getElementById('cutband');
+  var cutAcc = document.getElementById('cutacc');
   var bar = document.querySelector('#progress i');
   var root = gsap.timeline({ paused: true });
 
@@ -111,6 +112,34 @@
       tl.fromTo(p, { t: -k - 10 }, { t: w + 10, duration: dur, ease: ease || 'power3.inOut', onUpdate: apply, immediateRender: false }, t);
     },
 
+    // Ouvertures graphiques d'un cadre (figure, colonne…). kind :
+    //  block  : trois bandes d'encre balaient le cadre puis se retirent en découvrant l'image (out : l'inverse)
+    //  diag   : l'image arrive en lames parallèles à la diagonale de couverture, qui glissent le long de 48°
+    //  slices : l'image arrive en lames qui glissent de sens opposés (dir 'v' verticales, 'h' horizontales)
+    //  tiles  : l'image se compose en tuiles qui pivotent, en vague diagonale
+    // Les pièces sont construites une fois ici ; à la fin, la vraie image reprend leur place.
+    gfx: function (tl, el, kind, t, o) {
+      o = o || {};
+      var W = o.w || parseFloat(el.style.width) || el.offsetWidth;
+      var H = o.h || parseFloat(el.style.height) || el.offsetHeight;
+      var img = o.img === false ? null : el.querySelector('img');
+      el.style.isolation = 'isolate';
+      if (kind === 'block') return gfxBlock(tl, el, t, W, H, img, o);
+      if (!img) return gfxBlock(tl, el, t, W, H, null, o);
+      var b = imgBox(img, W, H);
+      var src = img.getAttribute('src');
+      var wrap = document.createElement('div');
+      wrap.className = 'gx-pieces';
+      el.appendChild(wrap);
+      var end = kind === 'diag' ? gfxDiag(tl, wrap, t, W, H, b, src, o)
+        : kind === 'tiles' ? gfxTiles(tl, wrap, t, W, H, b, src, o)
+          : gfxSlices(tl, wrap, t, W, H, b, src, o);
+      tl.fromTo(img, { opacity: 0 }, { opacity: 1, duration: 0.01 }, end);
+      tl.fromTo(wrap, { opacity: 1 }, { opacity: 0, duration: 0.01 }, end);
+      K.cue(tl, kind === 'tiles' ? 'tick' : 'whoosh', t);
+      return end;
+    },
+
     // Mouvement lent continu (caméra qui dérive) entre t0 et t1.
     drift: function (tl, el, t0, t1, from, to) {
       tl.fromTo(el, from, Object.assign({ duration: t1 - t0, ease: 'sine.inOut', immediateRender: false }, to), t0);
@@ -134,6 +163,91 @@
         { opacity: 1, y: 0, filter: 'blur(0px)', duration: o.dur || 0.7, ease: 'expo.out', stagger: o.stagger || 0.05 }, t);
     }
   };
+
+  // ------------------------------------------------------- ouvertures graphiques
+  function imgBox(img, W, H) {
+    var s = img.style;
+    if (s.left && s.width) return { l: parseFloat(s.left), t: parseFloat(s.top), w: parseFloat(s.width), h: parseFloat(s.height) };
+    return { l: 0, t: 0, w: W, h: H };
+  }
+  function piece(parent, x, y, w, h, b, src, dx, dy) {
+    var p = document.createElement('div');
+    p.className = 'gx-piece';
+    p.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px';
+    var i = document.createElement('div');
+    i.className = 'gx-img';
+    i.style.cssText = "left:" + (b.l - x + (dx || 0)) + "px;top:" + (b.t - y + (dy || 0)) + "px;width:" + b.w + "px;height:" + b.h + "px;background-image:url('" + src + "')";
+    p.appendChild(i);
+    parent.appendChild(p);
+    return p;
+  }
+  function isDark(el) {
+    var inner = el.closest('.inner');
+    var c = inner ? getComputedStyle(inner).backgroundColor : 'rgb(255,255,255)';
+    var m = c.match(/\d+/g) || [255, 255, 255];
+    return (Number(m[0]) + Number(m[1]) + Number(m[2])) / 3 < 100;
+  }
+  function gfxBlock(tl, el, t, W, H, img, o) {
+    var n = o.bars || 3, dark = isDark(el);
+    var hide = document.createElement('i');
+    hide.className = 'gx-hide';
+    hide.style.background = dark ? getComputedStyle(el.closest('.inner')).backgroundColor : '#fff';
+    el.appendChild(hide);
+    var bars = [];
+    for (var k = 0; k < n; k++) {
+      var bar = document.createElement('i');
+      bar.className = 'gx-bar';
+      var y0 = Math.round(k * H / n), y1 = Math.round((k + 1) * H / n);
+      bar.style.cssText = 'top:' + y0 + 'px;height:' + (y1 - y0 + 1) + 'px;background:' + (dark ? '#f4f3f1' : '#121212');
+      el.appendChild(bar);
+      bars.push(bar);
+    }
+    var st = 0.07, inDur = 0.45, tm = t + inDur + (n - 1) * st;
+    tl.fromTo(bars, { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, transformOrigin: '0% 50%', duration: inDur, ease: 'power4.inOut', stagger: st }, t);
+    tl.fromTo(hide, { opacity: o.out ? 0 : 1 }, { opacity: o.out ? 1 : 0, duration: 0.01 }, tm);
+    tl.fromTo(bars, { scaleX: 1, transformOrigin: '100% 50%' }, { scaleX: 0, transformOrigin: '100% 50%', duration: 0.5, ease: 'power4.inOut', stagger: st, immediateRender: false }, tm + 0.03);
+    if (img && !o.out && o.zoom !== false) tl.fromTo(img, { scale: 1.16 }, { scale: 1, duration: 1.8, ease: 'expo.out' }, tm);
+    K.cue(tl, 'tick', t);
+    if (o.out) tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: 0.01 }, tm + 0.02);
+    return tm + 0.5 + (n - 1) * st;
+  }
+  function gfxDiag(tl, wrap, t, W, H, b, src, o) {
+    var n = o.n || 5, k = H * 0.896, bw = (W + k) / n, len = Math.hypot(k, H), D = len * 1.1 + 40;
+    var last = 0;
+    for (var j = 0; j < n; j++) {
+      var a = -k + j * bw;
+      var p = piece(wrap, 0, 0, W, H, b, src);
+      p.style.clipPath = 'polygon(' + (a + k) + 'px 0px,' + (a + bw + k + 1) + 'px 0px,' + (a + bw + 1) + 'px ' + H + 'px,' + a + 'px ' + H + 'px)';
+      var s = j % 2 ? 1 : -1, at = t + j * 0.07;
+      tl.fromTo(p, { x: s * D * k / len, y: -s * D * H / len }, { x: 0, y: 0, duration: 1.1, ease: 'power4.out' }, at);
+      last = at + 1.1;
+    }
+    return last;
+  }
+  function gfxSlices(tl, wrap, t, W, H, b, src, o) {
+    var n = o.n || 7, v = o.dir !== 'h', last = 0;
+    for (var j = 0; j < n; j++) {
+      var p;
+      if (v) { var x0 = Math.round(j * W / n), x1 = Math.round((j + 1) * W / n); p = piece(wrap, x0, 0, x1 - x0, H, b, src); }
+      else { var y0 = Math.round(j * H / n), y1 = Math.round((j + 1) * H / n); p = piece(wrap, 0, y0, W, y1 - y0, b, src); }
+      var inner = p.firstChild, s = j % 2 ? 1 : -1, at = t + Math.abs(j - (n - 1) / 2) * 0.06;
+      tl.fromTo(inner, v ? { y: s * (H + b.h + 20) } : { x: s * (W + b.w + 20) }, v ? { y: 0, duration: 1.0, ease: 'power4.out' } : { x: 0, duration: 1.0, ease: 'power4.out' }, at);
+      last = Math.max(last, at + 1.0);
+    }
+    return last;
+  }
+  function gfxTiles(tl, wrap, t, W, H, b, src, o) {
+    var cols = o.cols || 6, rows = o.rows || 4, last = 0;
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var x0 = Math.round(c * W / cols), x1 = Math.round((c + 1) * W / cols);
+      var y0 = Math.round(r * H / rows), y1 = Math.round((r + 1) * H / rows);
+      var p = piece(wrap, x0, y0, x1 - x0, y1 - y0, b, src);
+      var at = t + (r + c) * 0.045;
+      tl.fromTo(p, { rotationY: -90, opacity: 0, transformPerspective: 900 }, { rotationY: 0, opacity: 1, transformPerspective: 900, duration: 0.75, ease: 'expo.out' }, at);
+      last = Math.max(last, at + 0.75);
+    }
+    return last;
+  }
 
   // ------------------------------------------------- scènes sans chorégraphie dédiée
   function generic(tl, f, t0, s) {
@@ -162,16 +276,22 @@
   function wipe(k) {
     var t0 = D.scenes[k].start;
     var inner = frames[k].querySelector('.inner');
-    var p = { t: -SLOPE - 20 };
+    // Une large bande d'encre, précédée d'un filet orange, balaie l'écran le long de la diagonale ;
+    // la nouvelle slide apparaît derrière elle.
+    var BAND = 320, GAP = 26, ACC = 30, START = -(SLOPE + BAND + GAP + ACC + 40);
+    var p = { t: START };
+    function para(el, a, w) {
+      el.setAttribute('points', (a + SLOPE) + ',0 ' + (a + SLOPE + w) + ',0 ' + (a + w) + ',1080 ' + a + ',1080');
+    }
     function apply() {
       // une fois la coupe passée, plus aucun masque (un clip-path aplatirait la 3D de la scène)
       inner.style.clipPath = p.t >= 1939 ? 'none' : 'polygon(-2000px 0px, ' + (p.t + SLOPE) + 'px 0px, ' + p.t + 'px 1080px, -2000px 1080px)';
-      cutLine.setAttribute('x1', p.t + SLOPE); cutLine.setAttribute('y1', 0);
-      cutLine.setAttribute('x2', p.t); cutLine.setAttribute('y2', 1080);
+      para(cutBand, p.t, BAND);
+      para(cutAcc, p.t + BAND + GAP, ACC);
     }
     apply();
     root.set(cutSvg, { opacity: 1 }, t0);
-    root.fromTo(p, { t: -SLOPE - 20 }, { t: 1940, duration: WIPE, ease: 'power3.inOut', onUpdate: apply, immediateRender: false }, t0);
+    root.fromTo(p, { t: START }, { t: 1940, duration: WIPE, ease: 'power3.inOut', onUpdate: apply, immediateRender: false }, t0);
     root.set(cutSvg, { opacity: 0 }, t0 + WIPE);
     K.cue(root, 'whoosh', t0);
   }

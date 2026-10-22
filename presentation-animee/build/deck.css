@@ -172,3 +172,15 @@ html, body {
 .f3-flat .cut-head { width: 9px; height: 9px; margin: -4px 0 0 -4px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #ff6a1a; z-index: 2; }
 .spark { position: absolute; left: 0; top: 0; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #ffb066; opacity: 0; z-index: 2; }
 .aerial { z-index: 3; transform-origin: 50% 50%; }
+
+/* Transition : bande d'encre et filet orange */
+#cut { mix-blend-mode: normal; }
+#cutband { fill: var(--ink); }
+#cutacc { fill: #ec9a1d; }
+
+/* Ouvertures graphiques */
+.gx-pieces { position: absolute; inset: 0; overflow: hidden; z-index: 4; pointer-events: none; }
+.gx-piece { position: absolute; overflow: hidden; }
+.gx-img { position: absolute; background-size: 100% 100%; background-repeat: no-repeat; }
+.gx-hide { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.gx-bar { position: absolute; left: 0; width: 100%; z-index: 6; pointer-events: none; }

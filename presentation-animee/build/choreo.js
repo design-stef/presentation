@@ -9,7 +9,7 @@ SCENES.cover = function (K, tl, f, t0) {
   var frame = K.q(f, '.mframe');
   var mts = K.qa(f, '.mt');
   var count = K.q(f, '.count');
-  K.diag(tl, frame, 1180, 664, t0 + 0.05, 0.6);
+  K.gfx(tl, frame, 'block', t0 + 0.05, { img: false, w: 1180, h: 664 });
   var T0 = t0 + 0.4, DT = 0.13;
   mts.forEach(function (m, k) {
     tl.set(m, { opacity: 1 }, T0 + k * DT);
@@ -26,7 +26,7 @@ SCENES.cover = function (K, tl, f, t0) {
   // Le compteur, en grand à droite du cadre pendant le montage, rejoint sa place à côté de « 2008– ».
   var cx = count.offsetLeft + count.offsetWidth / 2, cy = count.offsetTop + count.offsetHeight / 2;
   tl.fromTo(count, { x: 1600 - cx, y: 470 - cy, scale: 2.1 }, { x: 0, y: 0, scale: 1, duration: 1.1, ease: 'expo.inOut' }, end + 0.35);
-  K.diag(tl, frame, 1180, 664, end + 0.05, 0.8, true);
+  K.gfx(tl, frame, 'block', end + 0.05, { img: false, w: 1180, h: 664, out: true });
   tl.fromTo(K.q(f, '.y0'), { opacity: 0, x: 40, filter: 'blur(12px)' }, { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, end + 1.1);
   K.draw(tl, K.q(f, '.cover-line line'), end + 0.6, 1.1);
   K.cue(tl, 'whoosh', end + 0.6);
@@ -47,7 +47,7 @@ SCENES['crossed-principe'] = function (K, tl, f, t0) {
   var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.0, ts = t0 + 1.0;
   // 1. la plaque pleine, à gauche
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 }, { x: 160, y: 10, scale: 0.88, duration: 0.01 }, t0);
-  tl.fromTo(flat, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, t0 + 0.3);
+  K.gfx(tl, flat, 'block', t0 + 0.25, { img: false, w: 720, h: 921 });
   // 2. le laser la découpe ligne à ligne : derrière la tête, la tôle découpée remplace la plaque
   var pr = { p: 0 };
   function raster() {
@@ -115,14 +115,11 @@ SCENES['crossed-nuit'] = function (K, tl, f, t0) {
 
 // 4. La famille Crossed : triptyque ---------------------------------------------------------
 SCENES['crossed-famille'] = function (K, tl, f, t0) {
-  var dirs = ['left', 'right', 'up'];
-  var from = { left: 'inset(0% 100% 0% 0%)', right: 'inset(0% 0% 0% 100%)', up: 'inset(100% 0% 0% 0%)' };
+  var kinds = ['diag', 'slices', 'block'];
   K.qa(f, '.pn').forEach(function (pn, k) {
     var at = t0 + 0.4 + k * 0.2;
     var img = pn.querySelector('img');
-    tl.fromTo(pn, { clipPath: from[dirs[k]] }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
-    tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 2.0, ease: 'expo.out' }, at);
-    K.cue(tl, 'tick', at + 0.3);
+    K.gfx(tl, pn, kinds[k], at, k === 1 ? { dir: 'h', n: 5 } : {});
     if (k < 2) K.drift(tl, img, t0 + 3.0, t0 + 11, { x: 0 }, { x: k ? -40 : -30 });
     else K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: 16 });
   });
@@ -190,8 +187,8 @@ SCENES['zadig-lieux'] = function (K, tl, f, t0) {
   tl.fromTo(det.querySelector('img'), { scale: 1.12 }, { scale: 1, duration: 1.4, ease: 'power1.out' }, t0 + 0.2);
   tl.fromTo(det, { x: 960 - 1515, y: 470 - 707.5, scale: 2.37 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.5);
   K.cue(tl, 'whoosh', t0 + 1.5);
-  K.reveal(tl, mus, 'left', t0 + 1.7, { dur: 1.1 });
-  K.reveal(tl, mil, 'down', t0 + 1.9, { dur: 1.0 });
+  K.gfx(tl, mus, 'slices', t0 + 1.7);
+  K.gfx(tl, mil, 'block', t0 + 1.9);
   K.caption(tl, f, t0 + 2.7);
   K.drift(tl, mus.querySelector('img'), t0 + 4.2, t0 + 11, { scale: 1 }, { scale: 1.05 });
   K.drift(tl, mil.querySelector('img'), t0 + 3.6, t0 + 11, { x: 0 }, { x: -24 });
@@ -199,9 +196,9 @@ SCENES['zadig-lieux'] = function (K, tl, f, t0) {
 
 // 8. Du croquis au banc ----------------------------------------------------------------------
 SCENES.croquis = function (K, tl, f, t0) {
-  K.reveal(tl, K.q(f, '.sk2'), 'draw', t0 + 0.4);
+  K.gfx(tl, K.q(f, '.sk2'), 'tiles', t0 + 0.4, { cols: 5, rows: 5 });
   K.cue(tl, 'draw', t0 + 0.4);
-  K.reveal(tl, K.q(f, '.sk1'), 'draw', t0 + 1.5);
+  K.gfx(tl, K.q(f, '.sk1'), 'tiles', t0 + 1.5, { cols: 6, rows: 4 });
   K.cue(tl, 'draw', t0 + 1.5);
   tl.fromTo(K.qa(f, '.slat'), { x: 180, opacity: 0 }, { x: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.07 }, t0 + 2.8);
   K.cue(tl, 'tick', t0 + 2.8);
@@ -212,10 +209,9 @@ SCENES.croquis = function (K, tl, f, t0) {
 // 9. Alassio --------------------------------------------------------------------------------
 SCENES.alassio = function (K, tl, f, t0) {
   var sea = K.q(f, '.sea'), park = K.q(f, '.park');
-  K.diag(tl, sea, 1290, 940, t0 + 0.35, 1.2);
-  tl.fromTo(sea.querySelector('img'), { x: 46 }, { x: -46, duration: 10.6, ease: 'none' }, t0 + 0.4);
-  K.reveal(tl, park, 'up', t0 + 1.3, { zoom: false });
-  tl.fromTo(park.querySelector('img'), { y: 90 }, { y: 0, duration: 1.8, ease: 'expo.out' }, t0 + 1.3);
+  K.gfx(tl, sea, 'diag', t0 + 0.35);
+  tl.fromTo(sea.querySelector('img'), { x: 46 }, { x: -46, duration: 9.2, ease: 'none' }, t0 + 1.8);
+  K.gfx(tl, park, 'slices', t0 + 1.2, { n: 5 });
   K.caption(tl, f, t0 + 2.0);
   K.drift(tl, park.querySelector('img'), t0 + 3.2, t0 + 11, { y: 0 }, { y: -30 });
 };
@@ -224,13 +220,13 @@ SCENES.alassio = function (K, tl, f, t0) {
 SCENES['emme-monaco'] = function (K, tl, f, t0) {
   var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam');
   var va = K.q(f, '.view-a'), vb = K.q(f, '.view-b');
-  K.diag(tl, walk, 1100, 940, t0 + 0.35, 1.1);
-  tl.fromTo(cam, { scale: 1 }, { scale: 1.12, duration: 6.4, ease: 'power1.inOut', transformOrigin: '55% 50%' }, t0 + 0.3);
+  K.gfx(tl, walk, 'diag', t0 + 0.35);
+  tl.fromTo(cam, { scale: 1 }, { scale: 1.12, duration: 4.9, ease: 'power1.inOut', transformOrigin: '55% 50%' }, t0 + 1.8);
   K.draw(tl, f.querySelectorAll('.bk path'), t0 + 3.0, 0.6, { stagger: 0.06 });
   K.cue(tl, 'tick', t0 + 3.0);
   // vues d'ensemble de la digue, tirées de la vidéo du projet : elles glissent lentement, comme le drone
-  K.reveal(tl, va, 'down', t0 + 1.2, { zoom: false });
-  K.reveal(tl, vb, 'up', t0 + 1.5, { zoom: false });
+  K.gfx(tl, va, 'block', t0 + 1.2);
+  K.gfx(tl, vb, 'block', t0 + 1.45);
   tl.fromTo(va.querySelector('img'), { x: 22 }, { x: -22, duration: 9.6, ease: 'none' }, t0 + 1.2);
   tl.fromTo(vb.querySelector('img'), { x: -22 }, { x: 22, duration: 9.3, ease: 'none' }, t0 + 1.5);
   K.caption(tl, f, t0 + 2.2);
@@ -240,23 +236,8 @@ SCENES['emme-monaco'] = function (K, tl, f, t0) {
 // 11. Variations : balayage circulaire ----------------------------------------------------------
 SCENES.variations = function (K, tl, f, t0) {
   var ring = K.q(f, '.ring'), snake = K.q(f, '.snake');
-  var C = [557, 452], R = 1600, A0 = -200;
-  var pr = { a: 0 };
-  function sweep() {
-    if (pr.a >= 360) { ring.style.clipPath = 'none'; return; }
-    var pts = [C[0] + 'px ' + C[1] + 'px'];
-    for (var a = 0; a <= pr.a; a += 8) pts.push(sector(a));
-    pts.push(sector(pr.a));
-    ring.style.clipPath = 'polygon(' + pts.join(',') + ')';
-  }
-  function sector(a) {
-    var r = (A0 + a) * Math.PI / 180;
-    return (C[0] + Math.cos(r) * R).toFixed(1) + 'px ' + (C[1] + Math.sin(r) * R).toFixed(1) + 'px';
-  }
-  sweep();
-  tl.fromTo(pr, { a: 0 }, { a: 360, duration: 1.8, ease: 'power2.inOut', onUpdate: sweep, immediateRender: false }, t0 + 0.4);
-  K.cue(tl, 'whoosh', t0 + 0.4);
-  tl.fromTo(snake, { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 1.3, ease: 'expo.out' }, t0 + 1.9);
+  K.gfx(tl, ring, 'tiles', t0 + 0.4, { cols: 7, rows: 6 });
+  K.gfx(tl, snake, 'block', t0 + 1.7);
   K.caption(tl, f, t0 + 1.0);
   K.drift(tl, ring.querySelector('img'), t0 + 2.4, t0 + 11, { scale: 1 }, { scale: 1.04 });
   K.drift(tl, snake, t0 + 3.4, t0 + 11, { x: 0 }, { x: -16 });
@@ -265,9 +246,9 @@ SCENES.variations = function (K, tl, f, t0) {
 // 12. Variations, esquisse --------------------------------------------------------------------
 SCENES['variations-detail'] = function (K, tl, f, t0) {
   var back = K.q(f, '.back');
-  K.reveal(tl, K.q(f, '.sketch'), 'draw', t0 + 0.4);
+  K.gfx(tl, K.q(f, '.sketch'), 'tiles', t0 + 0.4, { cols: 7, rows: 5 });
   K.cue(tl, 'draw', t0 + 0.4);
-  K.reveal(tl, back, 'up', t0 + 1.2, { zoom: false });
+  K.gfx(tl, back, 'slices', t0 + 1.2, { n: 5 });
   tl.fromTo(back.querySelector('.cam'), { scale: 1 }, { scale: 1.16, duration: 9.6, ease: 'power1.inOut', transformOrigin: '50% 22%' }, t0 + 1.2);
   K.caption(tl, f, t0 + 1.0);
 };
@@ -279,8 +260,7 @@ SCENES['variations-paris'] = function (K, tl, f, t0) {
   tl.fromTo(aerial.querySelector('.cam'), { scale: 1.1 }, { scale: 1, duration: 1.8, ease: 'power1.out' }, t0 + 0.1);
   tl.fromTo(aerial, { x: -480, y: 0, scale: 2 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.7);
   K.cue(tl, 'whoosh', t0 + 1.7);
-  tl.fromTo(ground, { clipPath: 'circle(0% at 50% 62%)' }, { clipPath: 'circle(85% at 50% 62%)', duration: 1.4, ease: 'power3.inOut' }, t0 + 2.3);
-  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 2.3);
+  K.gfx(tl, ground, 'diag', t0 + 2.3);
   K.caption(tl, f, t0 + 2.6);
   K.drift(tl, aerial.querySelector('.cam'), t0 + 3.4, t0 + 11, { scale: 1 }, { scale: 1.06 });
   K.drift(tl, ground.querySelector('img'), t0 + 4.9, t0 + 11, { scale: 1 }, { scale: 1.04 });
@@ -289,11 +269,11 @@ SCENES['variations-paris'] = function (K, tl, f, t0) {
 // 14. Emme, moulage : quatre temps, chacun avec son geste --------------------------------------
 SCENES['emme-moule'] = function (K, tl, f, t0) {
   var render = K.q(f, '.render');
-  K.reveal(tl, render, 'up', t0 + 0.35, { zoom: false });
+  K.gfx(tl, render, 'block', t0 + 0.35, { zoom: false });
   tl.fromTo(render, { y: 60 }, { y: 0, duration: 1.4, ease: 'expo.out' }, t0 + 0.35);
   var arrows = K.qa(f, '.arw');
   // 1. le moule arrive
-  tl.fromTo(K.q(f, '.step1'), { x: -70, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'expo.out' }, t0 + 1.5);
+  K.gfx(tl, K.q(f, '.step1'), 'block', t0 + 1.4, { zoom: false });
   K.cue(tl, 'tick', t0 + 1.5);
   K.draw(tl, arrows[0], t0 + 2.0, 0.4);
   // 2. la coulée monte
@@ -332,7 +312,7 @@ SCENES['emme-djeddah'] = function (K, tl, f, t0) {
   tl.fromTo(ai, { x: 410, y: -964, scale: S1 }, { x: 1300, y: -80, scale: S2, duration: 1.2, ease: 'power3.inOut', immediateRender: false }, t0 + 3.4);
   tl.fromTo(aer, { clipPath: 'inset(0px 410px 0px 410px)' }, { clipPath: 'inset(0px 0px 0px 1300px)', duration: 1.2, ease: 'power3.inOut', immediateRender: false }, t0 + 3.4);
   K.cue(tl, 'whoosh', t0 + 3.4);
-  K.reveal(tl, ground, 'left', t0 + 3.7);
+  K.gfx(tl, ground, 'slices', t0 + 3.7);
   K.caption(tl, f, t0 + 4.4);
   K.drift(tl, ai, t0 + 6.2, t0 + 11, { y: -80 }, { y: -125 });
 };
@@ -364,9 +344,8 @@ SCENES['acier-beton'] = function (K, tl, f, t0) {
 // 19. Ligne ----------------------------------------------------------------------------------------
 SCENES.ligne = function (K, tl, f, t0) {
   var photo = K.q(f, '.photo');
-  K.reveal(tl, photo, 'up', t0 + 0.35, { zoom: false });
-  tl.fromTo(photo.querySelector('.cam'), { scale: 1.12 }, { scale: 1, duration: 3, ease: 'power2.out' }, t0 + 0.35);
-  K.reveal(tl, K.q(f, '.diagram'), 'draw', t0 + 1.6);
+  K.gfx(tl, photo, 'slices', t0 + 0.35);
+  K.gfx(tl, K.q(f, '.diagram'), 'tiles', t0 + 1.6, { cols: 6, rows: 4 });
   K.cue(tl, 'draw', t0 + 1.6);
   K.caption(tl, f, t0 + 1.0);
   K.drift(tl, photo.querySelector('.cam'), t0 + 3.4, t0 + 11, { scale: 1 }, { scale: 1.04 });
@@ -375,9 +354,9 @@ SCENES.ligne = function (K, tl, f, t0) {
 // 20. Banc monolithe ---------------------------------------------------------------------------------
 SCENES.monolithe = function (K, tl, f, t0) {
   var photo = K.q(f, '.photo');
-  K.diag(tl, photo, 1040, 940, t0 + 0.35, 1.1);
-  tl.fromTo(photo.querySelector('.cam'), { x: -60, scale: 1.08 }, { x: 0, scale: 1.08, duration: 10.6, ease: 'none' }, t0 + 0.35);
-  K.reveal(tl, K.q(f, '.diagram'), 'draw', t0 + 1.8);
+  K.gfx(tl, photo, 'diag', t0 + 0.35);
+  tl.fromTo(photo.querySelector('.cam'), { x: 0, scale: 1 }, { x: 40, scale: 1.06, duration: 9.2, ease: 'none' }, t0 + 1.8);
+  K.gfx(tl, K.q(f, '.diagram'), 'block', t0 + 1.8, { zoom: false });
   K.cue(tl, 'draw', t0 + 1.8);
   K.caption(tl, f, t0 + 1.0);
 };
@@ -399,9 +378,8 @@ SCENES.fontvieille = function (K, tl, f, t0) {
   tl.fromTo(dusk.querySelector('img'), { scale: 1.1 }, { scale: 1, duration: 1.6, ease: 'power1.out' }, t0 + 0.1);
   tl.fromTo(dusk, { x: 485, y: 237.5, scale: 2.0215 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.6);
   K.cue(tl, 'whoosh', t0 + 1.6);
-  K.reveal(tl, harbour, 'left', t0 + 2.1);
-  K.reveal(tl, planter, 'up', t0 + 2.3, { zoom: false });
-  tl.fromTo(planter.querySelector('img'), { y: 120 }, { y: 0, duration: 1.9, ease: 'expo.out' }, t0 + 2.3);
+  K.gfx(tl, harbour, 'block', t0 + 2.1);
+  K.gfx(tl, planter, 'slices', t0 + 2.3, { n: 5 });
   K.caption(tl, f, t0 + 3.0);
   K.drift(tl, planter.querySelector('img'), t0 + 4.4, t0 + 11, { scale: 1 }, { scale: 1.05 });
 };
@@ -411,7 +389,7 @@ SCENES.kj = function (K, tl, f, t0) {
   var cam = K.q(f, '.cam');
   K.draw(tl, f.querySelectorAll('.axis'), t0 + 0.4, 1.0, { stagger: 0.15 });
   K.cue(tl, 'draw', t0 + 0.4);
-  K.reveal(tl, K.q(f, '.lamp'), 'draw', t0 + 1.3);
+  K.gfx(tl, K.q(f, '.lamp'), 'block', t0 + 1.3, { zoom: false });
   tl.to(f.querySelectorAll('.axis'), { opacity: 0.25, duration: 0.8, ease: 'power1.out' }, t0 + 3.4);
   tl.fromTo(cam, { scale: 1.06 }, { scale: 1, duration: 6, ease: 'power2.out', transformOrigin: '36% 44%' }, t0 + 0.3);
   K.caption(tl, f, t0 + 2.2);
@@ -428,8 +406,8 @@ SCENES['kj-prix'] = function (K, tl, f, t0) {
 
 // 25. KJ, technique : vues, traits de rappel ---------------------------------------------------------------------
 SCENES['kj-technique'] = function (K, tl, f, t0) {
-  K.reveal(tl, K.q(f, '.side'), 'up', t0 + 0.35, { zoom: false, dur: 1.3 });
-  tl.fromTo(K.q(f, '.front'), { x: 140, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out' }, t0 + 1.2);
+  K.gfx(tl, K.q(f, '.side'), 'slices', t0 + 0.35, { n: 6 });
+  K.gfx(tl, K.q(f, '.front'), 'block', t0 + 1.2, { zoom: false });
   var leads = K.qa(f, '.lead'), dots = K.qa(f, '.lead-dot'), notes = K.qa(f, '.note');
   [0, 1].forEach(function (k) {
     var at = t0 + 2.4 + k * 0.7;
@@ -447,9 +425,7 @@ SCENES.usinage = function (K, tl, f, t0) {
   K.qa(f, '.pn').forEach(function (pn, k) {
     var at = t0 + 0.4 + k * 0.32;
     var img = pn.querySelector('img');
-    tl.fromTo(pn, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power3.inOut' }, at);
-    tl.fromTo(img, { y: -200, scale: 1.12 }, { y: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, at);
-    K.cue(tl, 'tick', at + 0.3);
+    K.gfx(tl, pn, 'slices', at, { dir: 'h', n: 6 });
     K.drift(tl, img, t0 + 3.2, t0 + 11, { y: 0 }, { y: k % 2 ? -26 : 26 });
   });
   K.caption(tl, f, t0 + 1.6);
@@ -459,7 +435,7 @@ SCENES.usinage = function (K, tl, f, t0) {
 SCENES.fonderie = function (K, tl, f, t0) {
   var steps = K.qa(f, '.step');
   steps.forEach(function (s, k) {
-    tl.fromTo(s, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, t0 + 0.5 + k * 0.22);
+    K.gfx(tl, s, 'block', t0 + 0.5 + k * 0.16, { zoom: false });
   });
   K.cue(tl, 'tick', t0 + 0.5);
   // un repère parcourt les étapes : l'étape en cours est pleine, les autres s'effacent
