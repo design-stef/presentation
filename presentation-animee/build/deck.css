@@ -167,3 +167,8 @@ html, body {
 .fc-strip { display: block; }
 .fc-strip span { display: block; height: 1em; }
 .fc-tot { font-size: 64px; color: var(--mute); margin-top: 18px; letter-spacing: -0.03em; }
+.f3-cut { position: absolute; inset: 0; }
+.f3-cut img { position: absolute; }
+.f3-flat .cut-head { width: 9px; height: 9px; margin: -4px 0 0 -4px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #ff6a1a; z-index: 2; }
+.spark { position: absolute; left: 0; top: 0; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #ffb066; opacity: 0; z-index: 2; }
+.aerial { z-index: 3; transform-origin: 50% 50%; }

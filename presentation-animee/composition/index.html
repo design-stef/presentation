@@ -175,6 +175,11 @@ html, body {
 .fc-strip { display: block; }
 .fc-strip span { display: block; height: 1em; }
 .fc-tot { font-size: 64px; color: var(--mute); margin-top: 18px; letter-spacing: -0.03em; }
+.f3-cut { position: absolute; inset: 0; }
+.f3-cut img { position: absolute; }
+.f3-flat .cut-head { width: 9px; height: 9px; margin: -4px 0 0 -4px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #ff6a1a; z-index: 2; }
+.spark { position: absolute; left: 0; top: 0; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #ffb066; opacity: 0; z-index: 2; }
+.aerial { z-index: 3; transform-origin: 50% 50%; }
 
     </style>
   </head>
@@ -343,18 +348,12 @@ html, body {
       "startTime": 267,
       "endTime": 269.9,
       "notes": "À vérifier : 1 versement, 2 injection, 3 remplissage, 4 ouverture, 5 éjection."
-    },
-    {
-      "sceneId": "merci",
-      "startTime": 277,
-      "endTime": 279.9,
-      "notes": "Fin. stephanechapelet.com"
     }
   ],
   "slideSequences": []
 }
     </script>
-    <div id="deck" data-composition-id="root" data-start="0" data-duration="281" data-width="1920" data-height="1080">
+    <div id="deck" data-composition-id="root" data-start="0" data-duration="271" data-width="1920" data-height="1080">
 
     <div id="sc-cover" class="scene-frame clip" data-composition-id="cover" data-start="0" data-duration="11" data-track-index="1" data-label="Couverture" data-theme="light" style="z-index:1">
       <div class="inner">
@@ -375,7 +374,10 @@ html, body {
       <div class="stage">
         <div class="f3-scene">
           <div class="f3-cam">
-            <div class="f3-flat"><img class="" src="assets/img/p02-panel.jpg" alt="" style="position:absolute;left:-45.0px;top:-22.0px;width:860.0px;height:960.0px" /><i class="cut-head"></i></div>
+            <div class="f3-flat"><img class="" src="assets/img/p02-plate.jpg" alt="" style="position:absolute;left:-45.0px;top:-22.0px;width:860.0px;height:960.0px" />
+              <div class="f3-cut"><img class="" src="assets/img/p02-panel.jpg" alt="" style="position:absolute;left:-45.0px;top:-22.0px;width:860.0px;height:960.0px" /></div>
+              <i class="cut-head"></i><i class="spark" data-k="0"></i><i class="spark" data-k="1"></i><i class="spark" data-k="2"></i><i class="spark" data-k="3"></i><i class="spark" data-k="4"></i><i class="spark" data-k="5"></i><i class="spark" data-k="6"></i><i class="spark" data-k="7"></i><i class="spark" data-k="8"></i><i class="spark" data-k="9"></i><i class="spark" data-k="10"></i><i class="spark" data-k="11"></i><i class="spark" data-k="12"></i><i class="spark" data-k="13"></i><i class="spark" data-k="14"></i><i class="spark" data-k="15"></i><i class="spark" data-k="16"></i><i class="spark" data-k="17"></i><i class="spark" data-k="18"></i><i class="spark" data-k="19"></i><i class="spark" data-k="20"></i><i class="spark" data-k="21"></i>
+            </div>
             <div class="f3 root s4" style="top:535px;height:340px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -557.0px"><div class="f3 up s3" style="height:195px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -362.0px"><b class="fnum">4</b><div class="f3 up s2" style="height:140px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -222.0px"><b class="fnum">3</b><div class="f3 up s1" style="height:157px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -65.0px"><b class="fnum">2</b><div class="f3 up s0" style="height:43px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -22.0px"><b class="fnum">1</b></div></div></div></div><div class="f3 down s5" style="height:46px;background-image:url('assets/img/p02-panel.jpg');background-size:860.0px 960.0px;background-position:-45.0px -897.0px"><b class="fnum">5</b></div></div>
           </div>
         </div>
@@ -383,7 +385,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">02</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">02</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Crossed</span></h2>
         <p class="cap-meta"><span class="w">Une</span> <span class="w">tôle</span> <span class="w">d'acier</span> <span class="w">découpée</span> <span class="w">au</span> <span class="w">laser,</span> <span class="w">pliée</span> <span class="w">en</span> <span class="w">cinq</span> <span class="w">temps</span></p>
       </div>
@@ -396,7 +398,7 @@ html, body {
         <svg class="ov bk" viewBox="0 0 1920 940" aria-hidden="true"><path class="brk" d="M530 306V270H566" /><path class="brk" d="M1574 270H1610V306" /><path class="brk" d="M1610 824V860H1574" /><path class="brk" d="M566 860H530V824" /></svg></div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">03</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">03</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Crossed</span> <span class="w">bench</span></h2>
         <p class="cap-meta"><span class="w">Lab23</span> <span class="w">·</span> <span class="w">acier</span> <span class="w">découpé,</span> <span class="w">éclairé</span> <span class="w">par</span> <span class="w">dessous</span></p>
       </div>
@@ -406,13 +408,13 @@ html, body {
     <div id="sc-crossed-famille" class="scene-frame clip" data-composition-id="crossed-famille" data-start="30" data-duration="11" data-track-index="1" data-label="La famille Crossed" data-theme="light" style="z-index:4">
       <div class="inner">
       <div class="stage">
-        <div class="pn" data-k="0" style="left:0px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-b.jpg" alt="" style="position:absolute;left:-857.7px;top:0.0px;width:2210.7px;height:940.0px" /></div></div>
-        <div class="pn" data-k="1" style="left:646px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-a.jpg" alt="" style="position:absolute;left:-725.0px;top:0.0px;width:2210.7px;height:940.0px" /></div></div>
-        <div class="pn" data-k="2" style="left:1292px;top:0px;width:628px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-c.jpg" alt="" style="position:absolute;left:0.0px;top:-2.0px;width:628.0px;height:942.0px" /></div></div>
+        <div class="pn" data-k="0" style="left:0px;top:0px;width:1270px;height:465px"><div class="pn-in"><img class="" src="assets/img/p04-b.jpg" alt="" style="position:absolute;left:0.0px;top:-108.9px;width:1349.7px;height:573.9px" /></div></div>
+        <div class="pn" data-k="1" style="left:0px;top:475px;width:1270px;height:465px"><div class="pn-in"><img class="" src="assets/img/p04-a.jpg" alt="" style="position:absolute;left:0.0px;top:-108.9px;width:1349.7px;height:573.9px" /></div></div>
+        <div class="pn" data-k="2" style="left:1280px;top:0px;width:640px;height:940px"><div class="pn-in"><img class="" src="assets/img/p04-c.jpg" alt="" style="position:absolute;left:0.0px;top:-20.0px;width:640.0px;height:960.0px" /></div></div>
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">04</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">04</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">La</span> <span class="w">famille</span> <span class="w">Crossed</span></h2>
         <p class="cap-meta"><span class="w">Jardinières</span> <span class="w">à</span> <span class="w">Barcelone,</span> <span class="w">siège</span> <span class="w">à</span> <span class="w">Capri,</span> <span class="w">corbeille</span></p>
       </div>
@@ -429,7 +431,7 @@ html, body {
       </div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">05</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">05</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Hilton</span> <span class="w">Lac-Leamy</span></h2>
         <p class="cap-meta"><span class="w">Canada</span> <span class="w">·</span> <span class="w">bancs,</span> <span class="w">corbeilles</span> <span class="w">et</span> <span class="w">jardinières</span></p>
       </div>
@@ -446,7 +448,7 @@ html, body {
       </div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">06</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">06</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Zadig</span></h2>
         <p class="cap-meta"><span class="w">Banc</span> <span class="w">en</span> <span class="w">acier</span> <span class="w">perforé,</span> <span class="w">à</span> <span class="w">facettes</span></p>
       </div>
@@ -462,7 +464,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">07</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">07</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Zadig</span></h2>
         <p class="cap-meta"><span class="w">Musée</span> <span class="w">de</span> <span class="w">Bergen,</span> <span class="w">Norvège</span> <span class="w">·</span> <span class="w">Milan</span></p>
       </div>
@@ -478,7 +480,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">08</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">08</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Du</span> <span class="w">croquis</span> <span class="w">au</span> <span class="w">banc</span></h2>
         <p class="cap-meta"><span class="w">Lattes</span> <span class="w">en</span> <span class="w">plat</span> <span class="w">cintré</span> <span class="w">puis</span> <span class="w">soudé</span></p>
       </div>
@@ -493,7 +495,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">09</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">09</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Alassio,</span> <span class="w">Italie</span></h2>
         <p class="cap-meta"><span class="w">Mobilier</span> <span class="w">urbain</span> <span class="w">du</span> <span class="w">front</span> <span class="w">de</span> <span class="w">mer</span></p>
       </div>
@@ -503,13 +505,14 @@ html, body {
     <div id="sc-emme-monaco" class="scene-frame clip" data-composition-id="emme-monaco" data-start="90" data-duration="11" data-track-index="1" data-label="Emme, Monte-Carlo" data-theme="light" style="z-index:10">
       <div class="inner">
       <div class="stage">
-        <figure class="ph walk" style="left:0px;top:0px;width:1300px;height:940px"><div class="cam"><img class="" src="assets/img/p10-a.jpg" alt="" style="position:absolute;left:0.0px;top:-124.3px;width:1564.5px;height:1122.9px" />
-          <svg class="ov bk" viewBox="0 0 1920 940" aria-hidden="true"><path class="brk" d="M615 556V520H651" /><path class="brk" d="M889 520H925V556" /><path class="brk" d="M925 859V895H889" /><path class="brk" d="M651 895H615V859" /></svg></div></figure>
-        <figure class="ph view" style="left:1310px;top:0px;width:610px;height:940px"><img class="" src="assets/img/p10-b.jpg" alt="" style="position:absolute;left:-222.1px;top:0.0px;width:1255.0px;height:940.0px" /></figure>
+        <figure class="ph walk" style="left:0px;top:0px;width:1100px;height:940px"><div class="cam"><img class="" src="assets/img/p10-a.jpg" alt="" style="position:absolute;left:0.0px;top:-9.6px;width:1323.8px;height:950.1px" />
+          <svg class="ov bk" viewBox="0 0 1920 940" aria-hidden="true"><path class="brk" d="M520 576V540H556" /><path class="brk" d="M749 540H785V576" /><path class="brk" d="M785 819V855H749" /><path class="brk" d="M556 855H520V819" /></svg></div></figure>
+        <figure class="ph view view-a" style="left:1110px;top:0px;width:810px;height:465px"><img class="" src="assets/img/p10-v44.jpg" alt="" style="position:absolute;left:-33.1px;top:-27.9px;width:876.3px;height:492.9px" /></figure>
+        <figure class="ph view view-b" style="left:1110px;top:475px;width:810px;height:465px"><img class="" src="assets/img/p10-v52.jpg" alt="" style="position:absolute;left:0.0px;top:-14.0px;width:876.3px;height:492.9px" /></figure>
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">10</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">10</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Promenade</span> <span class="w">de</span> <span class="w">Monte-Carlo,</span> <span class="w">Monaco</span></p>
       </div>
@@ -524,7 +527,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">11</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">11</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Bancs</span> <span class="w">courbes</span> <span class="w">en</span> <span class="w">bois,</span> <span class="w">modulables</span></p>
       </div>
@@ -539,7 +542,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">12</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">12</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Esquisse</span> <span class="w">de</span> <span class="w">la</span> <span class="w">structure</span> <span class="w">et</span> <span class="w">du</span> <span class="w">dossier</span></p>
       </div>
@@ -549,12 +552,12 @@ html, body {
     <div id="sc-variations-paris" class="scene-frame clip" data-composition-id="variations-paris" data-start="120" data-duration="11" data-track-index="1" data-label="Variations, Paris" data-theme="light" style="z-index:13">
       <div class="inner">
       <div class="stage">
-        <figure class="ph ground" style="left:0px;top:0px;width:1300px;height:940px"><img class="" src="assets/img/p13-a.jpg" alt="" style="position:absolute;left:0.0px;top:-175.7px;width:1550.6px;height:1163.4px" /></figure>
-        <figure class="ph aerial" style="left:1310px;top:0px;width:610px;height:940px"><div class="cam"><img class="" src="assets/img/p13-b.jpg" alt="" style="position:absolute;left:-379.7px;top:0.0px;width:1369.4px;height:940.0px" /></div></figure>
+        <figure class="ph ground" style="left:0px;top:0px;width:950px;height:940px"><img class="" src="assets/img/p13-a.jpg" alt="" style="position:absolute;left:-56.8px;top:0.0px;width:1254.0px;height:940.8px" /></figure>
+        <figure class="ph aerial" style="left:960px;top:0px;width:960px;height:940px"><div class="cam"><img class="" src="assets/img/p13-nuit.jpg" alt="" style="position:absolute;left:-224.1px;top:0.0px;width:1408.2px;height:940.0px" /></div></figure>
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">13</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">13</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Variations</span></h2>
         <p class="cap-meta"><span class="w">Bancs</span> <span class="w">installés</span> <span class="w">à</span> <span class="w">Paris</span></p>
       </div>
@@ -570,7 +573,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">14</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">14</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Béton</span> <span class="w">moulé</span> <span class="w">:</span> <span class="w">remplir,</span> <span class="w">retourner,</span> <span class="w">démouler</span></p>
       </div>
@@ -582,7 +585,7 @@ html, body {
       <div class="stage"><div class="cam"><i class="plank" data-k="0" style="left:0px;top:0px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -91.6px"></i><i class="plank" data-k="1" style="left:0px;top:104px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -195.6px"></i><i class="plank" data-k="2" style="left:0px;top:209px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -300.6px"></i><i class="plank" data-k="3" style="left:0px;top:313px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -404.6px"></i><i class="plank" data-k="4" style="left:0px;top:418px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -509.6px"></i><i class="plank" data-k="5" style="left:0px;top:522px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -613.6px"></i><i class="plank" data-k="6" style="left:0px;top:627px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -718.6px"></i><i class="plank" data-k="7" style="left:0px;top:731px;width:1920px;height:105px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -822.6px"></i><i class="plank" data-k="8" style="left:0px;top:836px;width:1920px;height:104px;background-image:url('assets/img/p15-a.jpg');background-size:1996.8px 1123.2px;background-position:-38.4px -927.6px"></i></div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">15</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">15</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Les</span> <span class="w">moules</span></h2>
         <p class="cap-meta"><span class="w">Coffrages</span> <span class="w">de</span> <span class="w">fabrication</span> <span class="w">à</span> <span class="w">l'atelier</span></p>
       </div>
@@ -597,7 +600,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">16</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">16</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Emme</span></h2>
         <p class="cap-meta"><span class="w">Corniche</span> <span class="w">de</span> <span class="w">Djeddah</span></p>
       </div>
@@ -610,7 +613,7 @@ html, body {
         <svg class="ov tech tech--ink" viewBox="0 0 1920 940" aria-hidden="true"><g class="bk"><path class="brk" d="M345 468V432H381" /><path class="brk" d="M1664 432H1700V468" /><path class="brk" d="M1700 828V864H1664" /><path class="brk" d="M381 864H345V828" /></g><path class="dim-tick" d="M361 886V922M1682 886V922" /><path class="dim-line" d="M361 904L1682 904" /><path class="dim-tick" d="M1734 448H1770M1734 848H1770" /><path class="dim-line" d="M1752 448L1752 848" /></svg></div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">17</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">17</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">béton</span> <span class="w">et</span> <span class="w">bois</span></h2>
         <p class="cap-meta"><span class="w">Piètements</span> <span class="w">en</span> <span class="w">béton,</span> <span class="w">assise</span> <span class="w">en</span> <span class="w">bois</span></p>
       </div>
@@ -623,7 +626,7 @@ html, body {
         <svg class="ov tech" viewBox="0 0 1920 940" aria-hidden="true"><g class="bk"><path class="brk" d="M600 420V384H636" /><path class="brk" d="M1618 384H1654V420" /><path class="brk" d="M1654 842V878H1618" /><path class="brk" d="M636 878H600V842" /></g><path class="dim-tick" d="M618 326V362M1636 326V362" /><path class="dim-line" d="M618 344L1636 344" /></svg></div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">18</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">18</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">acier</span> <span class="w">et</span> <span class="w">béton</span></h2>
         <p class="cap-meta"><span class="w">Une</span> <span class="w">coque</span> <span class="w">en</span> <span class="w">acier</span> <span class="w">sur</span> <span class="w">un</span> <span class="w">socle</span> <span class="w">en</span> <span class="w">béton</span></p>
       </div>
@@ -638,7 +641,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">19</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">19</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Ligne</span></h2>
         <p class="cap-meta"><span class="w">MyWay</span> <span class="w">·</span> <span class="w">une</span> <span class="w">assise</span> <span class="w">sur</span> <span class="w">un</span> <span class="w">profil</span> <span class="w">en</span> <span class="w">I</span></p>
       </div>
@@ -653,7 +656,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">20</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">20</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">monolithe</span></h2>
         <p class="cap-meta"><span class="w">Béton,</span> <span class="w">une</span> <span class="w">assise</span> <span class="w">qui</span> <span class="w">se</span> <span class="w">décale</span></p>
       </div>
@@ -669,7 +672,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">21</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">21</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Banc</span> <span class="w">et</span> <span class="w">jardinières</span></h2>
         <p class="cap-meta"><span class="w">Béton</span> <span class="w">blanc,</span> <span class="w">formes</span> <span class="w">galets</span></p>
       </div>
@@ -685,7 +688,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">22</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">22</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Monaco</span></h2>
         <p class="cap-meta"><span class="w">Port</span> <span class="w">de</span> <span class="w">Fontvieille</span></p>
       </div>
@@ -700,7 +703,7 @@ html, body {
       </div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">23</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">23</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Éclairage</span> <span class="w">urbain</span> <span class="w">pour</span> <span class="w">Fontes</span> <span class="w">de</span> <span class="w">Paris</span></p>
       </div>
@@ -710,11 +713,10 @@ html, body {
     <div id="sc-kj-prix" class="scene-frame clip" data-composition-id="kj-prix" data-start="230" data-duration="11" data-track-index="1" data-label="KJ, Design Plus" data-theme="light" style="z-index:24">
       <div class="inner">
       <div class="stage"><div class="cam"><img class="" src="assets/img/p24-a.jpg" alt="" style="position:absolute;left:0.0px;top:-140.0px;width:1920.0px;height:1080.0px" />
-        <img class="badge" src="assets/img/p24-b.jpg" alt="" style="position:absolute;left:1378px;top:794px;width:267px;height:40px" />
-        <svg class="ov tech tech--ink" viewBox="0 0 1920 940" aria-hidden="true"><ellipse class="ring" cx="1511" cy="814" rx="200" ry="74" /></svg></div></div>
+        <img class="badge" src="assets/img/p24-b.jpg" alt="" style="position:absolute;left:1378px;top:794px;width:267px;height:40px" /></div></div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">24</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">24</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Lauréat</span> <span class="w">du</span> <span class="w">prix</span> <span class="w">Design</span> <span class="w">Plus</span></p>
       </div>
@@ -732,7 +734,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">25</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">25</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">KJ</span></h2>
         <p class="cap-meta"><span class="w">Capot</span> <span class="w">ouvrant,</span> <span class="w">module</span> <span class="w">LED</span></p>
       </div>
@@ -748,7 +750,7 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">26</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">26</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Le</span> <span class="w">moule</span></h2>
         <p class="cap-meta"><span class="w">Usinage,</span> <span class="w">puis</span> <span class="w">levage</span> <span class="w">du</span> <span class="w">moule</span> <span class="w">en</span> <span class="w">acier</span></p>
       </div>
@@ -763,20 +765,9 @@ html, body {
       </div>
       
       <div class="cap bcap">
-        <div class="cap-num"><span class="mask"><span class="num">27</span></span><span class="tot">/28</span></div>
+        <div class="cap-num"><span class="mask"><span class="num">27</span></span><span class="tot">/27</span></div>
         <h2 class="cap-name"><span class="w">Fonderie</span></h2>
         <p class="cap-meta"><span class="w">Moulage</span> <span class="w">sous</span> <span class="w">pression</span> <span class="w">de</span> <span class="w">l'aluminium,</span> <span class="w">en</span> <span class="w">cinq</span> <span class="w">temps</span></p>
-      </div>
-      </div>
-    </div>
-
-    <div id="sc-merci" class="scene-frame clip" data-composition-id="merci" data-start="270" data-duration="11" data-track-index="1" data-label="Merci" data-theme="light" style="z-index:28">
-      <div class="inner">
-      <div class="cover end">
-        <p class="wordmark">Chapelet.</p>
-        <svg class="cover-line" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="1253" y1="377" x2="1625" y2="-38" /></svg>
-        <p class="byline"><span class="w">stephanechapelet.com</span></p>
-        <h1 class="cover-title"><span class="mask"><span class="rise">Merci.</span></span></h1>
       </div>
       </div>
     </div>
@@ -784,7 +775,7 @@ html, body {
       <div id="progress" aria-hidden="true"><i></i></div>
     </div>
     <script>
-      window.DECK = {"total":281,"step":10,"len":11,"scenes":[{"id":"cover","start":0,"len":11,"fx":"cover","custom":true,"stepGap":0},{"id":"crossed-principe","start":10,"len":11,"fx":"laser","custom":true,"stepGap":0},{"id":"crossed-nuit","start":20,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"crossed-famille","start":30,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"hilton","start":40,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig","start":50,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig-lieux","start":60,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"croquis","start":70,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"alassio","start":80,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-monaco","start":90,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations","start":100,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-detail","start":110,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-paris","start":120,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-moule","start":130,"len":11,"fx":"","custom":true,"stepGap":0.42},{"id":"moules","start":140,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-djeddah","start":150,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"beton-bois","start":160,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"acier-beton","start":170,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"ligne","start":180,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"monolithe","start":190,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"blanc","start":200,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fontvieille","start":210,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj","start":220,"len":11,"fx":"glow","custom":true,"stepGap":0},{"id":"kj-prix","start":230,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj-technique","start":240,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"usinage","start":250,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fonderie","start":260,"len":11,"fx":"","custom":true,"stepGap":0.5},{"id":"merci","start":270,"len":11,"fx":"end","custom":true,"stepGap":0}]};
+      window.DECK = {"total":271,"step":10,"len":11,"scenes":[{"id":"cover","start":0,"len":11,"fx":"cover","custom":true,"stepGap":0},{"id":"crossed-principe","start":10,"len":11,"fx":"laser","custom":true,"stepGap":0},{"id":"crossed-nuit","start":20,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"crossed-famille","start":30,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"hilton","start":40,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig","start":50,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"zadig-lieux","start":60,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"croquis","start":70,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"alassio","start":80,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-monaco","start":90,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations","start":100,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-detail","start":110,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"variations-paris","start":120,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-moule","start":130,"len":11,"fx":"","custom":true,"stepGap":0.42},{"id":"moules","start":140,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"emme-djeddah","start":150,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"beton-bois","start":160,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"acier-beton","start":170,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"ligne","start":180,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"monolithe","start":190,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"blanc","start":200,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fontvieille","start":210,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj","start":220,"len":11,"fx":"glow","custom":true,"stepGap":0},{"id":"kj-prix","start":230,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"kj-technique","start":240,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"usinage","start":250,"len":11,"fx":"","custom":true,"stepGap":0},{"id":"fonderie","start":260,"len":11,"fx":"","custom":true,"stepGap":0.5}]};
     </script>
     <script>
 // Chorégraphies des scènes. Chaque fonction écrit ses animations dans la timeline commune « tl »
@@ -829,44 +820,57 @@ SCENES.cover = function (K, tl, f, t0) {
 SCENES['crossed-principe'] = function (K, tl, f, t0) {
   var cam = K.q(f, '.f3-cam');
   var flat = K.q(f, '.f3-flat');
+  var cut = K.q(f, '.f3-cut');
   var head = K.q(f, '.cut-head');
+  var sparks = K.qa(f, '.spark');
   var root3 = K.q(f, '.f3.root');
-  var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.4, ts = t0 + 0.45;
-  // à plat, à gauche : la découpe ligne à ligne (trait net, sans lueur)
+  var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.0, ts = t0 + 1.0;
+  // 1. la plaque pleine, à gauche
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 }, { x: 160, y: 10, scale: 0.88, duration: 0.01 }, t0);
+  tl.fromTo(flat, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, t0 + 0.3);
+  // 2. le laser la découpe ligne à ligne : derrière la tête, la tôle découpée remplace la plaque
   var pr = { p: 0 };
   function raster() {
     var P = pr.p * ROWS;
     var r = Math.min(ROWS - 1, Math.floor(P));
     var x = pr.p >= 1 ? W : (P - r) * W;
     var y0 = r * RH, y1 = (r + 1) * RH;
-    flat.style.clipPath = pr.p >= 1 ? 'none' : 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
-    head.style.opacity = pr.p > 0 && pr.p < 1 ? '1' : '0';
-    head.style.transform = 'translate(' + x + 'px,' + y0 + 'px)';
+    cut.style.clipPath = pr.p >= 1 ? 'none' : 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
+    var active = pr.p > 0 && pr.p < 1;
+    head.style.opacity = active ? '1' : '0';
+    head.style.transform = 'translate(' + x + 'px,' + (y0 + RH / 2) + 'px)';
+    var tau = pr.p * T, life = 0.32;
+    sparks.forEach(function (sp, k) {
+      var age = (((tau - k * life / sparks.length) % life) + life) % life;
+      var te = tau - age;
+      if (!active || te < 0) { sp.style.opacity = '0'; return; }
+      var Pe = te / T * ROWS, re = Math.floor(Pe);
+      var xe = (Pe - re) * W, ye = (re + 0.5) * RH;
+      var vx = (K.hash(k, 1) - 0.75) * 520, vy = -60 - K.hash(k, 2) * 300;
+      sp.style.opacity = String(1 - age / life);
+      sp.style.transform = 'translate(' + (xe + vx * age).toFixed(1) + 'px,' + (ye + vy * age + 1500 * age * age).toFixed(1) + 'px)';
+    });
   }
   raster();
   tl.fromTo(pr, { p: 0 }, { p: 1, duration: T, ease: 'none', onUpdate: raster, immediateRender: false }, ts);
   K.cue(tl, 'laser', ts);
-  // la tôle découpée passe en 3D : même image, découpée en six bandes articulées
+  // 3. la tôle découpée passe en 3D : même image, découpée en six bandes articulées
   tl.fromTo(root3, { opacity: 0 }, { opacity: 1, duration: 0.01 }, ts + T + 0.1);
   tl.fromTo(flat, { opacity: 1 }, { opacity: 0, duration: 0.01, immediateRender: false }, ts + T + 0.1);
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 },
-    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.1, ease: 'power3.inOut', immediateRender: false }, t0 + 3.0);
-  K.cue(tl, 'whoosh', t0 + 3.0);
-  // pli après pli, dans l'ordre des numéros gravés sur la tôle
-  var folds = [
-    ['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]
-  ];
-  tl.fromTo(root3, { rotationX: 0 }, { rotationX: -6.8, duration: 0.5, ease: 'power2.inOut' }, t0 + 4.1);
-  // compteur de plis « 1/5 … 5/5 » à droite, et la caméra suit la tôle qui se replie
+    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.0, ease: 'power3.inOut', immediateRender: false }, t0 + 3.15);
+  K.cue(tl, 'whoosh', t0 + 3.15);
+  // 4. pli après pli, dans l'ordre des numéros gravés sur la tôle
+  var folds = [['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]];
+  tl.fromTo(root3, { rotationX: 0 }, { rotationX: -6.8, duration: 0.5, ease: 'power2.inOut' }, t0 + 4.2);
   var counter = K.q(f, '.fold-count'), strip = K.q(f, '.fc-strip');
-  tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.0);
+  tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.1);
   tl.fromTo(strip, { yPercent: 0 }, { yPercent: 0, duration: 0.01 }, t0);
-  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.6, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
+  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.5, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
   folds.forEach(function (fd, k) {
     var el = f.querySelector('.f3' + fd[0]);
-    var at = t0 + 4.1 + k * 0.52;
-    tl.fromTo(el, { rotationX: 0 }, { rotationX: fd[1], duration: 0.55, ease: 'power2.inOut' }, at);
+    var at = t0 + 4.2 + k * 0.46;
+    tl.fromTo(el, { rotationX: 0 }, { rotationX: fd[1], duration: 0.5, ease: 'power2.inOut' }, at);
     if (k > 0) tl.fromTo(strip, { yPercent: -(k - 1) * 20 }, { yPercent: -k * 20, duration: 0.45, ease: 'expo.out', immediateRender: false }, at);
     K.cue(tl, 'tick', at + 0.3);
   });
@@ -891,13 +895,16 @@ SCENES['crossed-nuit'] = function (K, tl, f, t0) {
 
 // 4. La famille Crossed : triptyque ---------------------------------------------------------
 SCENES['crossed-famille'] = function (K, tl, f, t0) {
+  var dirs = ['left', 'right', 'up'];
+  var from = { left: 'inset(0% 100% 0% 0%)', right: 'inset(0% 0% 0% 100%)', up: 'inset(100% 0% 0% 0%)' };
   K.qa(f, '.pn').forEach(function (pn, k) {
-    var at = t0 + 0.4 + k * 0.16;
+    var at = t0 + 0.4 + k * 0.2;
     var img = pn.querySelector('img');
-    tl.fromTo(pn, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
-    tl.fromTo(img, { y: 240, scale: 1.14 }, { y: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, at);
+    tl.fromTo(pn, { clipPath: from[dirs[k]] }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
+    tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 2.0, ease: 'expo.out' }, at);
     K.cue(tl, 'tick', at + 0.3);
-    K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: k % 2 ? 26 : -26 });
+    if (k < 2) K.drift(tl, img, t0 + 3.0, t0 + 11, { x: 0 }, { x: k ? -40 : -30 });
+    else K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: 16 });
   });
   K.caption(tl, f, t0 + 1.4);
 };
@@ -995,13 +1002,17 @@ SCENES.alassio = function (K, tl, f, t0) {
 
 // 10. Emme à Monte-Carlo ----------------------------------------------------------------------
 SCENES['emme-monaco'] = function (K, tl, f, t0) {
-  var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam'), view = K.q(f, '.view');
-  K.diag(tl, walk, 1300, 940, t0 + 0.35, 1.1);
+  var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam');
+  var va = K.q(f, '.view-a'), vb = K.q(f, '.view-b');
+  K.diag(tl, walk, 1100, 940, t0 + 0.35, 1.1);
   tl.fromTo(cam, { scale: 1 }, { scale: 1.12, duration: 6.4, ease: 'power1.inOut', transformOrigin: '55% 50%' }, t0 + 0.3);
   K.draw(tl, f.querySelectorAll('.bk path'), t0 + 3.0, 0.6, { stagger: 0.06 });
   K.cue(tl, 'tick', t0 + 3.0);
-  K.reveal(tl, view, 'down', t0 + 1.3, { zoom: false });
-  tl.fromTo(view.querySelector('img'), { y: -70 }, { y: 0, duration: 1.8, ease: 'expo.out' }, t0 + 1.3);
+  // vues d'ensemble de la digue, tirées de la vidéo du projet : elles glissent lentement, comme le drone
+  K.reveal(tl, va, 'down', t0 + 1.2, { zoom: false });
+  K.reveal(tl, vb, 'up', t0 + 1.5, { zoom: false });
+  tl.fromTo(va.querySelector('img'), { x: 22 }, { x: -22, duration: 9.6, ease: 'none' }, t0 + 1.2);
+  tl.fromTo(vb.querySelector('img'), { x: -22 }, { x: 22, duration: 9.3, ease: 'none' }, t0 + 1.5);
   K.caption(tl, f, t0 + 2.2);
   K.drift(tl, cam, t0 + 6.7, t0 + 11, { scale: 1.12 }, { scale: 1.16 });
 };
@@ -1044,13 +1055,15 @@ SCENES['variations-detail'] = function (K, tl, f, t0) {
 // 13. Variations à Paris : plongée aérienne, puis la place s'ouvre en cercle ------------------
 SCENES['variations-paris'] = function (K, tl, f, t0) {
   var aerial = K.q(f, '.aerial'), ground = K.q(f, '.ground');
-  K.reveal(tl, aerial, 'down', t0 + 0.35, { zoom: false });
-  tl.fromTo(aerial.querySelector('.cam'), { scale: 1 }, { scale: 1.28, duration: 10.4, ease: 'power1.inOut' }, t0 + 0.35);
-  tl.fromTo(ground, { clipPath: 'circle(0% at 40% 62%)' }, { clipPath: 'circle(85% at 40% 62%)', duration: 1.5, ease: 'power3.inOut' }, t0 + 1.2);
-  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 1.2);
-  K.cue(tl, 'whoosh', t0 + 1.2);
-  K.caption(tl, f, t0 + 2.0);
-  K.drift(tl, ground.querySelector('img'), t0 + 3.8, t0 + 11, { scale: 1 }, { scale: 1.04 });
+  // la place de nuit, plein cadre, puis elle rejoint sa moitié d'écran
+  tl.fromTo(aerial.querySelector('.cam'), { scale: 1.1 }, { scale: 1, duration: 1.8, ease: 'power1.out' }, t0 + 0.1);
+  tl.fromTo(aerial, { x: -480, y: 0, scale: 2 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.7);
+  K.cue(tl, 'whoosh', t0 + 1.7);
+  tl.fromTo(ground, { clipPath: 'circle(0% at 50% 62%)' }, { clipPath: 'circle(85% at 50% 62%)', duration: 1.4, ease: 'power3.inOut' }, t0 + 2.3);
+  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 2.3);
+  K.caption(tl, f, t0 + 2.6);
+  K.drift(tl, aerial.querySelector('.cam'), t0 + 3.4, t0 + 11, { scale: 1 }, { scale: 1.06 });
+  K.drift(tl, ground.querySelector('img'), t0 + 4.9, t0 + 11, { scale: 1 }, { scale: 1.04 });
 };
 
 // 14. Emme, moulage : quatre temps, chacun avec son geste --------------------------------------
@@ -1189,9 +1202,6 @@ SCENES.kj = function (K, tl, f, t0) {
 SCENES['kj-prix'] = function (K, tl, f, t0) {
   var cam = K.q(f, '.cam');
   tl.fromTo(cam, { x: -70, scale: 1.08 }, { x: 0, scale: 1, duration: 4.6, ease: 'power2.out' }, t0 + 0.3);
-  tl.fromTo(K.q(f, '.badge'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, t0 + 2.2);
-  K.draw(tl, K.q(f, '.ring'), t0 + 2.5, 1.0);
-  K.cue(tl, 'draw', t0 + 2.5);
   K.caption(tl, f, t0 + 1.2);
   K.drift(tl, cam, t0 + 5.0, t0 + 11, { x: 0, scale: 1 }, { x: 22, scale: 1.03 });
 };

@@ -250,8 +250,4 @@ export const slides = [
     cap: { at: { left: 80, top: 80 }, name: 'Fonderie', meta: "Moulage sous pression de l'aluminium, en cinq temps" },
     notes: 'À vérifier : 1 versement, 2 injection, 3 remplissage, 4 ouverture, 5 éjection.',
   },
-  {
-    id: 'merci', label: 'Merci', theme: 'light', fx: 'end',
-    notes: 'Fin. stephanechapelet.com',
-  },
 ];

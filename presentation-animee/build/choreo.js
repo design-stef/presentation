@@ -40,44 +40,57 @@ SCENES.cover = function (K, tl, f, t0) {
 SCENES['crossed-principe'] = function (K, tl, f, t0) {
   var cam = K.q(f, '.f3-cam');
   var flat = K.q(f, '.f3-flat');
+  var cut = K.q(f, '.f3-cut');
   var head = K.q(f, '.cut-head');
+  var sparks = K.qa(f, '.spark');
   var root3 = K.q(f, '.f3.root');
-  var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.4, ts = t0 + 0.45;
-  // à plat, à gauche : la découpe ligne à ligne (trait net, sans lueur)
+  var W = 720, H = 921, ROWS = 12, RH = H / ROWS, T = 2.0, ts = t0 + 1.0;
+  // 1. la plaque pleine, à gauche
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 }, { x: 160, y: 10, scale: 0.88, duration: 0.01 }, t0);
+  tl.fromTo(flat, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, t0 + 0.3);
+  // 2. le laser la découpe ligne à ligne : derrière la tête, la tôle découpée remplace la plaque
   var pr = { p: 0 };
   function raster() {
     var P = pr.p * ROWS;
     var r = Math.min(ROWS - 1, Math.floor(P));
     var x = pr.p >= 1 ? W : (P - r) * W;
     var y0 = r * RH, y1 = (r + 1) * RH;
-    flat.style.clipPath = pr.p >= 1 ? 'none' : 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
-    head.style.opacity = pr.p > 0 && pr.p < 1 ? '1' : '0';
-    head.style.transform = 'translate(' + x + 'px,' + y0 + 'px)';
+    cut.style.clipPath = pr.p >= 1 ? 'none' : 'polygon(0px 0px,' + W + 'px 0px,' + W + 'px ' + y0 + 'px,' + x + 'px ' + y0 + 'px,' + x + 'px ' + y1 + 'px,0px ' + y1 + 'px)';
+    var active = pr.p > 0 && pr.p < 1;
+    head.style.opacity = active ? '1' : '0';
+    head.style.transform = 'translate(' + x + 'px,' + (y0 + RH / 2) + 'px)';
+    var tau = pr.p * T, life = 0.32;
+    sparks.forEach(function (sp, k) {
+      var age = (((tau - k * life / sparks.length) % life) + life) % life;
+      var te = tau - age;
+      if (!active || te < 0) { sp.style.opacity = '0'; return; }
+      var Pe = te / T * ROWS, re = Math.floor(Pe);
+      var xe = (Pe - re) * W, ye = (re + 0.5) * RH;
+      var vx = (K.hash(k, 1) - 0.75) * 520, vy = -60 - K.hash(k, 2) * 300;
+      sp.style.opacity = String(1 - age / life);
+      sp.style.transform = 'translate(' + (xe + vx * age).toFixed(1) + 'px,' + (ye + vy * age + 1500 * age * age).toFixed(1) + 'px)';
+    });
   }
   raster();
   tl.fromTo(pr, { p: 0 }, { p: 1, duration: T, ease: 'none', onUpdate: raster, immediateRender: false }, ts);
   K.cue(tl, 'laser', ts);
-  // la tôle découpée passe en 3D : même image, découpée en six bandes articulées
+  // 3. la tôle découpée passe en 3D : même image, découpée en six bandes articulées
   tl.fromTo(root3, { opacity: 0 }, { opacity: 1, duration: 0.01 }, ts + T + 0.1);
   tl.fromTo(flat, { opacity: 1 }, { opacity: 0, duration: 0.01, immediateRender: false }, ts + T + 0.1);
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 },
-    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.1, ease: 'power3.inOut', immediateRender: false }, t0 + 3.0);
-  K.cue(tl, 'whoosh', t0 + 3.0);
-  // pli après pli, dans l'ordre des numéros gravés sur la tôle
-  var folds = [
-    ['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]
-  ];
-  tl.fromTo(root3, { rotationX: 0 }, { rotationX: -6.8, duration: 0.5, ease: 'power2.inOut' }, t0 + 4.1);
-  // compteur de plis « 1/5 … 5/5 » à droite, et la caméra suit la tôle qui se replie
+    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.0, ease: 'power3.inOut', immediateRender: false }, t0 + 3.15);
+  K.cue(tl, 'whoosh', t0 + 3.15);
+  // 4. pli après pli, dans l'ordre des numéros gravés sur la tôle
+  var folds = [['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]];
+  tl.fromTo(root3, { rotationX: 0 }, { rotationX: -6.8, duration: 0.5, ease: 'power2.inOut' }, t0 + 4.2);
   var counter = K.q(f, '.fold-count'), strip = K.q(f, '.fc-strip');
-  tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.0);
+  tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.1);
   tl.fromTo(strip, { yPercent: 0 }, { yPercent: 0, duration: 0.01 }, t0);
-  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.6, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
+  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.5, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
   folds.forEach(function (fd, k) {
     var el = f.querySelector('.f3' + fd[0]);
-    var at = t0 + 4.1 + k * 0.52;
-    tl.fromTo(el, { rotationX: 0 }, { rotationX: fd[1], duration: 0.55, ease: 'power2.inOut' }, at);
+    var at = t0 + 4.2 + k * 0.46;
+    tl.fromTo(el, { rotationX: 0 }, { rotationX: fd[1], duration: 0.5, ease: 'power2.inOut' }, at);
     if (k > 0) tl.fromTo(strip, { yPercent: -(k - 1) * 20 }, { yPercent: -k * 20, duration: 0.45, ease: 'expo.out', immediateRender: false }, at);
     K.cue(tl, 'tick', at + 0.3);
   });
@@ -102,13 +115,16 @@ SCENES['crossed-nuit'] = function (K, tl, f, t0) {
 
 // 4. La famille Crossed : triptyque ---------------------------------------------------------
 SCENES['crossed-famille'] = function (K, tl, f, t0) {
+  var dirs = ['left', 'right', 'up'];
+  var from = { left: 'inset(0% 100% 0% 0%)', right: 'inset(0% 0% 0% 100%)', up: 'inset(100% 0% 0% 0%)' };
   K.qa(f, '.pn').forEach(function (pn, k) {
-    var at = t0 + 0.4 + k * 0.16;
+    var at = t0 + 0.4 + k * 0.2;
     var img = pn.querySelector('img');
-    tl.fromTo(pn, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
-    tl.fromTo(img, { y: 240, scale: 1.14 }, { y: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, at);
+    tl.fromTo(pn, { clipPath: from[dirs[k]] }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power4.inOut' }, at);
+    tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 2.0, ease: 'expo.out' }, at);
     K.cue(tl, 'tick', at + 0.3);
-    K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: k % 2 ? 26 : -26 });
+    if (k < 2) K.drift(tl, img, t0 + 3.0, t0 + 11, { x: 0 }, { x: k ? -40 : -30 });
+    else K.drift(tl, img, t0 + 3.0, t0 + 11, { y: 0 }, { y: 16 });
   });
   K.caption(tl, f, t0 + 1.4);
 };
@@ -206,13 +222,17 @@ SCENES.alassio = function (K, tl, f, t0) {
 
 // 10. Emme à Monte-Carlo ----------------------------------------------------------------------
 SCENES['emme-monaco'] = function (K, tl, f, t0) {
-  var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam'), view = K.q(f, '.view');
-  K.diag(tl, walk, 1300, 940, t0 + 0.35, 1.1);
+  var walk = K.q(f, '.walk'), cam = walk.querySelector('.cam');
+  var va = K.q(f, '.view-a'), vb = K.q(f, '.view-b');
+  K.diag(tl, walk, 1100, 940, t0 + 0.35, 1.1);
   tl.fromTo(cam, { scale: 1 }, { scale: 1.12, duration: 6.4, ease: 'power1.inOut', transformOrigin: '55% 50%' }, t0 + 0.3);
   K.draw(tl, f.querySelectorAll('.bk path'), t0 + 3.0, 0.6, { stagger: 0.06 });
   K.cue(tl, 'tick', t0 + 3.0);
-  K.reveal(tl, view, 'down', t0 + 1.3, { zoom: false });
-  tl.fromTo(view.querySelector('img'), { y: -70 }, { y: 0, duration: 1.8, ease: 'expo.out' }, t0 + 1.3);
+  // vues d'ensemble de la digue, tirées de la vidéo du projet : elles glissent lentement, comme le drone
+  K.reveal(tl, va, 'down', t0 + 1.2, { zoom: false });
+  K.reveal(tl, vb, 'up', t0 + 1.5, { zoom: false });
+  tl.fromTo(va.querySelector('img'), { x: 22 }, { x: -22, duration: 9.6, ease: 'none' }, t0 + 1.2);
+  tl.fromTo(vb.querySelector('img'), { x: -22 }, { x: 22, duration: 9.3, ease: 'none' }, t0 + 1.5);
   K.caption(tl, f, t0 + 2.2);
   K.drift(tl, cam, t0 + 6.7, t0 + 11, { scale: 1.12 }, { scale: 1.16 });
 };
@@ -255,13 +275,15 @@ SCENES['variations-detail'] = function (K, tl, f, t0) {
 // 13. Variations à Paris : plongée aérienne, puis la place s'ouvre en cercle ------------------
 SCENES['variations-paris'] = function (K, tl, f, t0) {
   var aerial = K.q(f, '.aerial'), ground = K.q(f, '.ground');
-  K.reveal(tl, aerial, 'down', t0 + 0.35, { zoom: false });
-  tl.fromTo(aerial.querySelector('.cam'), { scale: 1 }, { scale: 1.28, duration: 10.4, ease: 'power1.inOut' }, t0 + 0.35);
-  tl.fromTo(ground, { clipPath: 'circle(0% at 40% 62%)' }, { clipPath: 'circle(85% at 40% 62%)', duration: 1.5, ease: 'power3.inOut' }, t0 + 1.2);
-  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 1.2);
-  K.cue(tl, 'whoosh', t0 + 1.2);
-  K.caption(tl, f, t0 + 2.0);
-  K.drift(tl, ground.querySelector('img'), t0 + 3.8, t0 + 11, { scale: 1 }, { scale: 1.04 });
+  // la place de nuit, plein cadre, puis elle rejoint sa moitié d'écran
+  tl.fromTo(aerial.querySelector('.cam'), { scale: 1.1 }, { scale: 1, duration: 1.8, ease: 'power1.out' }, t0 + 0.1);
+  tl.fromTo(aerial, { x: -480, y: 0, scale: 2 }, { x: 0, y: 0, scale: 1, duration: 1.3, ease: 'expo.inOut' }, t0 + 1.7);
+  K.cue(tl, 'whoosh', t0 + 1.7);
+  tl.fromTo(ground, { clipPath: 'circle(0% at 50% 62%)' }, { clipPath: 'circle(85% at 50% 62%)', duration: 1.4, ease: 'power3.inOut' }, t0 + 2.3);
+  tl.fromTo(ground.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, t0 + 2.3);
+  K.caption(tl, f, t0 + 2.6);
+  K.drift(tl, aerial.querySelector('.cam'), t0 + 3.4, t0 + 11, { scale: 1 }, { scale: 1.06 });
+  K.drift(tl, ground.querySelector('img'), t0 + 4.9, t0 + 11, { scale: 1 }, { scale: 1.04 });
 };
 
 // 14. Emme, moulage : quatre temps, chacun avec son geste --------------------------------------
@@ -400,9 +422,6 @@ SCENES.kj = function (K, tl, f, t0) {
 SCENES['kj-prix'] = function (K, tl, f, t0) {
   var cam = K.q(f, '.cam');
   tl.fromTo(cam, { x: -70, scale: 1.08 }, { x: 0, scale: 1, duration: 4.6, ease: 'power2.out' }, t0 + 0.3);
-  tl.fromTo(K.q(f, '.badge'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, t0 + 2.2);
-  K.draw(tl, K.q(f, '.ring'), t0 + 2.5, 1.0);
-  K.cue(tl, 'draw', t0 + 2.5);
   K.caption(tl, f, t0 + 1.2);
   K.drift(tl, cam, t0 + 5.0, t0 + 11, { x: 0, scale: 1 }, { x: 22, scale: 1.03 });
 };

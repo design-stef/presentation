@@ -98,7 +98,10 @@ export const html = {
       <div class="stage">
         <div class="f3-scene">
           <div class="f3-cam">
-            <div class="f3-flat">${img('p02-panel.jpg', P)}<i class="cut-head"></i></div>
+            <div class="f3-flat">${img('p02-plate.jpg', P)}
+              <div class="f3-cut">${img('p02-panel.jpg', P)}</div>
+              <i class="cut-head"></i>${Array.from({ length: 22 }, (_, k) => `<i class="spark" data-k="${k}"></i>`).join('')}
+            </div>
             <div class="f3 root s4" style="top:535px;height:340px;${bg('p02-panel.jpg', P, 0, 535)}">${up}${down}</div>
           </div>
         </div>
@@ -116,17 +119,15 @@ export const html = {
       ${K.caption(s, i)}`;
   },
 
-  // 4. La famille Crossed : triptyque plein cadre.
+  // 4. La famille Crossed : Barcelone et Capri en entier (format paysage), la corbeille en colonne.
   'crossed-famille'(s, i, K) {
-    const cols = [
-      { src: 'p04-b.jpg', fx: 0.53, fy: 0.72 },
-      { src: 'p04-a.jpg', fx: 0.47, fy: 0.62 },
-      { src: 'p04-c.jpg', fx: 0.5, fy: 0.6 },
-    ];
-    const W = 628, G = 18;
+    // les deux photos paysage sont montrées presque entières (fenêtre sans la bande de droite, qui contient la corbeille)
+    const land = (src) => { const p = windowed(K, src, 1270, 465, 0, 0, 1195); p.top = 465 - p.h; return p; };
     return `
-      <div class="stage">${cols.map((c, k) => `
-        <div class="pn" data-k="${k}" style="${box(k * (W + G), 0, W, 940)}"><div class="pn-in">${img(c.src, place(K, c.src, W, 940, c.fx, c.fy))}</div></div>`).join('')}
+      <div class="stage">
+        <div class="pn" data-k="0" style="${box(0, 0, 1270, 465)}"><div class="pn-in">${img('p04-b.jpg', land('p04-b.jpg'))}</div></div>
+        <div class="pn" data-k="1" style="${box(0, 475, 1270, 465)}"><div class="pn-in">${img('p04-a.jpg', land('p04-a.jpg'))}</div></div>
+        <div class="pn" data-k="2" style="${box(1280, 0, 640, 940)}"><div class="pn-in">${img('p04-c.jpg', place(K, 'p04-c.jpg', 640, 940, 0.5, 0.6))}</div></div>
       </div>
       ${K.caption(s, i)}`;
   },
@@ -194,14 +195,16 @@ export const html = {
       ${K.caption(s, i)}`;
   },
 
-  // 10. Emme à Monte-Carlo : la caméra avance sur la promenade, cadrage du transat Emme.
+  // 10. Emme à Monte-Carlo : la caméra avance sur la promenade ; à droite, deux vues d'ensemble
+  // de la digue tirées de la vidéo du projet.
   'emme-monaco'(s, i, K) {
-    const a = windowed(K, 'p10-a.jpg', 1300, 940, 0, 110, 1150);
+    const a = windowed(K, 'p10-a.jpg', 1100, 940, 0, 10, 1150);
     return `
       <div class="stage">
-        <figure class="ph walk" style="${box(0, 0, 1300, 940)}"><div class="cam">${img('p10-a.jpg', a)}
-          ${svg(brackets(615, 520, 310, 375), 'bk')}</div></figure>
-        ${frame('p10-b.jpg', 1310, 0, 610, 940, place(K, 'p10-b.jpg', 610, 940, 0.42, 0.5), 'view')}
+        <figure class="ph walk" style="${box(0, 0, 1100, 940)}"><div class="cam">${img('p10-a.jpg', a)}
+          ${svg(brackets(520, 540, 265, 315), 'bk')}</div></figure>
+        ${frame('p10-v44.jpg', 1110, 0, 810, 465, place(K, 'p10-v44.jpg', 810, 465, 0.5, 0.55, 1.06), 'view view-a')}
+        ${frame('p10-v52.jpg', 1110, 475, 810, 465, place(K, 'p10-v52.jpg', 810, 465, 0.45, 0.5, 1.06), 'view view-b')}
       </div>
       ${K.caption(s, i)}`;
   },
@@ -226,12 +229,12 @@ export const html = {
       ${K.caption(s, i)}`;
   },
 
-  // 13. Variations à Paris : la vue aérienne plonge, puis la place s'ouvre en cercle.
+  // 13. Variations à Paris : la place de nuit, plein cadre, rejoint sa place ; les bancs s'ouvrent en cercle.
   'variations-paris'(s, i, K) {
     return `
       <div class="stage">
-        <figure class="ph ground" style="${box(0, 0, 1300, 940)}">${img('p13-a.jpg', windowed(K, 'p13-a.jpg', 1300, 940, 0, 150, 1110))}</figure>
-        <figure class="ph aerial" style="${box(1310, 0, 610, 940)}"><div class="cam">${img('p13-b.jpg', place(K, 'p13-b.jpg', 610, 940, 0.5, 0.5))}</div></figure>
+        <figure class="ph ground" style="${box(0, 0, 950, 940)}">${img('p13-a.jpg', windowed(K, 'p13-a.jpg', 950, 940, 60, 0, 1003))}</figure>
+        <figure class="ph aerial" style="${box(960, 0, 960, 940)}"><div class="cam">${img('p13-nuit.jpg', place(K, 'p13-nuit.jpg', 960, 940, 0.5, 0.6))}</div></figure>
       </div>
       ${K.caption(s, i)}`;
   },
@@ -342,8 +345,7 @@ export const html = {
     const p = place(K, 'p24-a.jpg', 1920, 940, 0.5, 1);
     return `
       <div class="stage"><div class="cam">${img('p24-a.jpg', p)}
-        <img class="badge" src="assets/img/p24-b.jpg" alt="" style="position:absolute;${box(1378, 934 + p.top, 267, 40)}" />
-        ${svg(`<ellipse class="ring" cx="1511" cy="${934 + p.top + 20}" rx="200" ry="74" />`, 'tech tech--ink')}</div></div>
+        <img class="badge" src="assets/img/p24-b.jpg" alt="" style="position:absolute;${box(1378, 934 + p.top, 267, 40)}" /></div></div>
       ${K.caption(s, i)}`;
   },
 
