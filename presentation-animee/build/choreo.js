@@ -78,7 +78,7 @@ SCENES['crossed-principe'] = function (K, tl, f, t0) {
   tl.fromTo(root3, { opacity: 0 }, { opacity: 1, duration: 0.01 }, ts + T + 0.1);
   tl.fromTo(flat, { opacity: 1 }, { opacity: 0, duration: 0.01, immediateRender: false }, ts + T + 0.1);
   tl.fromTo(cam, { x: 160, y: 10, scale: 0.88, rotationX: 0, rotationY: 0 },
-    { x: 600, y: 60, scale: 0.78, rotationX: -16, rotationY: -36, duration: 1.0, ease: 'power3.inOut', immediateRender: false }, t0 + 3.15);
+    { x: 600, y: 60, scale: 0.78, rotationX: -34, rotationY: -24, duration: 1.0, ease: 'power3.inOut', immediateRender: false }, t0 + 3.15);
   K.cue(tl, 'whoosh', t0 + 3.15);
   // 4. pli après pli, dans l'ordre des numéros gravés sur la tôle
   var folds = [['.s0', 109.4], ['.s1', -114.3], ['.s2', 57.2], ['.s3', -149.1], ['.s5', -83.2]];
@@ -86,7 +86,7 @@ SCENES['crossed-principe'] = function (K, tl, f, t0) {
   var counter = K.q(f, '.fold-count'), strip = K.q(f, '.fc-strip');
   tl.fromTo(counter, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: 'expo.out' }, t0 + 4.1);
   tl.fromTo(strip, { yPercent: 0 }, { yPercent: 0, duration: 0.01 }, t0);
-  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 622, y: -330, scale: 1.12, duration: 1.5, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
+  tl.fromTo(cam, { x: 600, y: 60, scale: 0.78 }, { x: 512, y: -250, scale: 1.12, duration: 1.5, ease: 'power2.inOut', immediateRender: false }, t0 + 5.3);
   folds.forEach(function (fd, k) {
     var el = f.querySelector('.f3' + fd[0]);
     var at = t0 + 4.2 + k * 0.46;
@@ -96,7 +96,7 @@ SCENES['crossed-principe'] = function (K, tl, f, t0) {
   });
   K.caption(tl, f, t0 + 0.7);
   // respiration : le banc plié tourne lentement
-  K.drift(tl, cam, t0 + 6.8, t0 + 11, { rotationY: -36, rotationX: -16 }, { rotationY: -50, rotationX: -18 });
+  K.drift(tl, cam, t0 + 6.8, t0 + 11, { rotationY: -24, rotationX: -34 }, { rotationY: -36, rotationX: -36 });
 };
 
 // 3. Crossed de nuit : la photo se recompose en lattes, puis cadrage du banc ------------------
